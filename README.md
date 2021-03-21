@@ -1,4 +1,4 @@
-# API Basics
+# API
 
 Making an Simple API Server using Flask Restful and Python.
 

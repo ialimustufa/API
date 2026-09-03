@@ -47,9 +47,7 @@ def validate_joke_payload(payload: object) -> dict[str, str | None]:
     allowed = {"author", "joke", "source"}
     unknown = sorted(set(payload) - allowed)
     if unknown:
-        raise ValidationError(
-            f"Unknown field(s): {', '.join(str(value) for value in unknown)}."
-        )
+        raise ValidationError(f"Unknown field(s): {', '.join(str(value) for value in unknown)}.")
 
     values: dict[str, str | None] = {}
     for field, maximum in (("author", 120), ("joke", 5000)):
@@ -60,9 +58,7 @@ def validate_joke_payload(payload: object) -> dict[str, str | None]:
         if not value:
             raise ValidationError(f"'{field}' must not be empty.", field)
         if len(value) > maximum:
-            raise ValidationError(
-                f"'{field}' must be at most {maximum} characters.", field
-            )
+            raise ValidationError(f"'{field}' must be at most {maximum} characters.", field)
         values[field] = value
 
     source = payload.get("source")
@@ -72,8 +68,6 @@ def validate_joke_payload(payload: object) -> dict[str, str | None]:
         source = source.strip()
         parsed = urlsplit(source)
         if parsed.scheme not in {"http", "https"} or not parsed.netloc:
-            raise ValidationError(
-                "'source' must be an absolute HTTP(S) URL.", "source"
-            )
+            raise ValidationError("'source' must be an absolute HTTP(S) URL.", "source")
     values["source"] = source
     return values

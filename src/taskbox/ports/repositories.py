@@ -7,9 +7,10 @@ course's persistence labs.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Generic, Protocol, Sequence, TypeVar
+from typing import Protocol, TypeVar
 
 from taskbox.domain.models import Membership, Project, Task, TaskStatus, User, WebhookReceipt
 
@@ -17,7 +18,7 @@ EntityT = TypeVar("EntityT")
 
 
 @dataclass(frozen=True, slots=True)
-class Page(Generic[EntityT]):
+class Page[EntityT]:
     """A cursor page; the cursor is opaque to callers."""
 
     items: Sequence[EntityT]
@@ -35,7 +36,9 @@ class UserRepository(Protocol):
 class ProjectRepository(Protocol):
     def get(self, project_id: str) -> Project | None: ...
 
-    def list_for_user(self, user_id: str, *, cursor: str | None = None, limit: int = 50) -> Page[Project]: ...
+    def list_for_user(
+        self, user_id: str, *, cursor: str | None = None, limit: int = 50
+    ) -> Page[Project]: ...
 
     def save(self, project: Project) -> Project: ...
 
@@ -45,7 +48,9 @@ class ProjectRepository(Protocol):
 class MembershipRepository(Protocol):
     def get(self, project_id: str, user_id: str) -> Membership | None: ...
 
-    def list_for_project(self, project_id: str, *, cursor: str | None = None, limit: int = 50) -> Page[Membership]: ...
+    def list_for_project(
+        self, project_id: str, *, cursor: str | None = None, limit: int = 50
+    ) -> Page[Membership]: ...
 
     def save(self, membership: Membership) -> Membership: ...
 
@@ -94,7 +99,7 @@ class UnitOfWork(Protocol):
     tasks: TaskRepository
     webhook_receipts: WebhookReceiptRepository
 
-    def __enter__(self) -> "UnitOfWork": ...
+    def __enter__(self) -> UnitOfWork: ...
 
     def __exit__(self, exc_type: object, exc_value: object, traceback: object) -> None: ...
 

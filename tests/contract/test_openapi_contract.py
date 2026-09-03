@@ -1,4 +1,5 @@
 """Executable checks that keep the generated API aligned with the course contract."""
+
 from __future__ import annotations
 
 import importlib
@@ -26,7 +27,5 @@ def test_generated_paths_match_committed_contract() -> None:
     expected_routes = {
         (p, m) for p, item in expected["paths"].items() for m in item if m in methods
     }
-    actual_routes = {
-        (p, m) for p, item in actual["paths"].items() for m in item if m in methods
-    }
+    actual_routes = {(p, m) for p, item in actual["paths"].items() for m in item if m in methods}
     assert actual_routes == expected_routes

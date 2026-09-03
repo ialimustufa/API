@@ -4,6 +4,7 @@
 Usage: python scripts/export_openapi.py [output.json]
 The app can expose either ``taskbox.api:app`` or ``taskbox.main:app``.
 """
+
 from __future__ import annotations
 
 import importlib

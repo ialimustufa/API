@@ -4,59 +4,95 @@ baseline: python-3.13
 duration_hours: 40
 format: self-paced
 modules:
-  - id: http
+  - id: http-api-design
     title: HTTP and API design
-    hours: 6
+    hours: 4
     labs: [01-http-api-design]
     outcomes:
-      - Explain resources, methods, status codes, content negotiation, and idempotency
+      - Explain resources, methods, status codes, negotiation, and idempotency
       - Design consistent JSON errors using RFC 9457 problem details
-  - id: fastapi
+  - id: fastapi-foundations
     title: FastAPI foundations
-    hours: 6
+    hours: 4
     labs: [02-fastapi-basics]
     outcomes:
       - Build typed routes with validation and generated OpenAPI
       - Separate transport concerns from application services
-  - id: persistence
-    title: CRUD and SQLite-first persistence
-    hours: 8
+  - id: crud
+    title: Resource-oriented CRUD
+    hours: 4
     labs: [03-crud]
     outcomes:
-      - Model projects, memberships, and tasks with repository ports
-      - Use transactions and migrations safely
-  - id: testing
-    title: Testing APIs and clients
-    hours: 6
+      - Model resource lifecycles and correct status-code behavior
+      - Implement predictable create, read, update, and delete operations
+  - id: testing-clients
+    title: API testing and clients
+    hours: 4
     labs: [04-testing-client-usage]
     outcomes:
       - Write unit, integration, and contract tests
-      - Exercise an API from curl and Python clients
-  - id: security
-    title: Authentication and authorization
+      - Exercise APIs using curl and Python clients
+  - id: auth-security
+    title: Authentication, authorization, and API security
     hours: 5
+    labs: [05-auth-security]
     outcomes:
-      - Issue and validate JWT access tokens
-      - Enforce project owner/editor/viewer roles and least privilege
-  - id: pagination
-    title: Stable cursor pagination
-    hours: 3
-    outcomes:
-      - Implement opaque cursors with deterministic ordering
-      - Handle invalid cursors and page boundaries
-  - id: postgres
-    title: PostgreSQL and Docker transition lab
+      - Issue and validate JWT access tokens with Argon2 password hashes
+      - Enforce owner, editor, and viewer permissions
+  - id: persistence
+    title: SQLite-first persistence
     hours: 4
+    labs: [06-persistence]
     outcomes:
-      - Move the same repository ports from SQLite to PostgreSQL
-      - Run the application and database with Docker Compose
-  - id: webhooks
-    title: Signed webhook imports and operations
+      - Separate domain objects from database rows
+      - Apply transactions, repository boundaries, and migrations
+  - id: operations-postgres
+    title: Operations and PostgreSQL transition
+    hours: 4
+    labs: [07-operations]
+    outcomes:
+      - Implement liveness, readiness, logging, and failure handling
+      - Move a SQLAlchemy-backed lab from SQLite to PostgreSQL with Docker
+  - id: graphql-grpc
+    title: GraphQL and gRPC survey
+    hours: 3
+    labs: [08-graphql-grpc]
+    outcomes:
+      - Compare REST, GraphQL, and gRPC tradeoffs
+      - Recognize schema, transport, and client-generation differences
+  - id: realtime
+    title: WebSockets and server-sent events
+    hours: 3
+    labs: [09-realtime]
+    outcomes:
+      - Choose between WebSockets and server-sent events
+      - Handle connections, disconnects, and event streaming
+  - id: webhooks-events
+    title: Signed webhooks and event processing
+    hours: 3
+    labs: [10-webhooks-events]
+    outcomes:
+      - Verify HMAC signatures over raw request bodies
+      - Make webhook processing idempotent and retry-safe
+  - id: capstone-deployment
+    title: TaskBox capstone and deployment
     hours: 2
+    labs: [11-capstone-deployment]
     outcomes:
-      - Verify HMAC signatures and make imports idempotent
-      - Record webhook receipts and safe failure states
+      - Integrate the course capabilities into one production-minded API
+      - Document migration, rollback, threat-model, and smoke-test plans
 course_completion:
   required_hours: 40
-  required_labs: [01-http-api-design, 02-fastapi-basics, 03-crud, 04-testing-client-usage]
-  required_checks: [pytest, ruff, openapi-contract]
+  required_labs:
+    - 01-http-api-design
+    - 02-fastapi-basics
+    - 03-crud
+    - 04-testing-client-usage
+    - 05-auth-security
+    - 06-persistence
+    - 07-operations
+    - 08-graphql-grpc
+    - 09-realtime
+    - 10-webhooks-events
+    - 11-capstone-deployment
+  required_checks: [pytest, ruff, openapi-contract, astro-check, astro-build]

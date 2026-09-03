@@ -6,6 +6,7 @@ details without coupling the domain to FastAPI (or any other web framework).
 
 from __future__ import annotations
 
+
 class TaskBoxError(Exception):
     """Base class for expected, client-visible domain failures."""
 

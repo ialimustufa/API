@@ -20,30 +20,17 @@ REALM = "legacy-jokes-api"
 def configured_credentials(config: dict[str, object]) -> tuple[str, str | None]:
     """Read a username and a Werkzeug password hash from config/environment."""
 
-    username = str(
-        config.get("AUTH_USERNAME")
-        or os.environ.get("LEGACY_API_USERNAME")
-        or "admin"
-    )
-    password_hash = config.get("AUTH_PASSWORD_HASH") or os.environ.get(
-        "LEGACY_API_PASSWORD_HASH"
-    )
+    username = str(config.get("AUTH_USERNAME") or os.environ.get("LEGACY_API_USERNAME") or "admin")
+    password_hash = config.get("AUTH_PASSWORD_HASH") or os.environ.get("LEGACY_API_PASSWORD_HASH")
     # AUTH_PASSWORD is intentionally a config-only convenience for tests and
     # local exercises; deployed environments should provide the hash instead.
     password = config.get("AUTH_PASSWORD")
-    if (
-        not password_hash
-        and isinstance(password, str)
-        and password
-        and generate_password_hash
-    ):
+    if not password_hash and isinstance(password, str) and password and generate_password_hash:
         password_hash = generate_password_hash(password)
     return username, str(password_hash) if password_hash else None
 
 
-def authenticate(
-    authorization: str | None, username: str, password_hash: str | None
-) -> bool:
+def authenticate(authorization: str | None, username: str, password_hash: str | None) -> bool:
     if not authorization or not password_hash or check_password_hash is None:
         return False
     scheme, separator, encoded = authorization.partition(" ")

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 40" role="img" aria-label="API Course">
+  <rect width="40" height="40" rx="10" fill="#2f6feb"/>
+  <path d="M11 28 20 12l9 16h-5l-2-4h-5l-2 4zm8-8h2l-1-3z" fill="white"/>
+  <text x="51" y="27" fill="currentColor" font-family="system-ui,sans-serif" font-size="21" font-weight="700">API Course</text>
+</svg>

@@ -1,0 +1,62 @@
+title: API Engineering with TaskBox
+version: 1
+baseline: python-3.13
+duration_hours: 40
+format: self-paced
+modules:
+  - id: http
+    title: HTTP and API design
+    hours: 6
+    labs: [01-http-api-design]
+    outcomes:
+      - Explain resources, methods, status codes, content negotiation, and idempotency
+      - Design consistent JSON errors using RFC 9457 problem details
+  - id: fastapi
+    title: FastAPI foundations
+    hours: 6
+    labs: [02-fastapi-basics]
+    outcomes:
+      - Build typed routes with validation and generated OpenAPI
+      - Separate transport concerns from application services
+  - id: persistence
+    title: CRUD and SQLite-first persistence
+    hours: 8
+    labs: [03-crud]
+    outcomes:
+      - Model projects, memberships, and tasks with repository ports
+      - Use transactions and migrations safely
+  - id: testing
+    title: Testing APIs and clients
+    hours: 6
+    labs: [04-testing-client-usage]
+    outcomes:
+      - Write unit, integration, and contract tests
+      - Exercise an API from curl and Python clients
+  - id: security
+    title: Authentication and authorization
+    hours: 5
+    outcomes:
+      - Issue and validate JWT access tokens
+      - Enforce project owner/editor/viewer roles and least privilege
+  - id: pagination
+    title: Stable cursor pagination
+    hours: 3
+    outcomes:
+      - Implement opaque cursors with deterministic ordering
+      - Handle invalid cursors and page boundaries
+  - id: postgres
+    title: PostgreSQL and Docker transition lab
+    hours: 4
+    outcomes:
+      - Move the same repository ports from SQLite to PostgreSQL
+      - Run the application and database with Docker Compose
+  - id: webhooks
+    title: Signed webhook imports and operations
+    hours: 2
+    outcomes:
+      - Verify HMAC signatures and make imports idempotent
+      - Record webhook receipts and safe failure states
+course_completion:
+  required_hours: 40
+  required_labs: [01-http-api-design, 02-fastapi-basics, 03-crud, 04-testing-client-usage]
+  required_checks: [pytest, ruff, openapi-contract]

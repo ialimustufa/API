@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
-from typing import Any, Mapping
+from collections.abc import Mapping
+from datetime import UTC, datetime, timedelta
+from typing import Any
 
 import jwt
 from pwdlib import PasswordHash
@@ -26,20 +27,45 @@ class Argon2PasswordHasher:
 
 
 class JWTTokenIssuer:
-    def __init__(self, secret_key: str, *, algorithm: str = "HS256", expires_seconds: int = 3600, issuer: str = "taskbox") -> None:
-        self.secret_key, self.algorithm, self.expires_seconds, self.issuer = secret_key, algorithm, expires_seconds, issuer
+    def __init__(
+        self,
+        secret_key: str,
+        *,
+        algorithm: str = "HS256",
+        expires_seconds: int = 3600,
+        issuer: str = "taskbox",
+    ) -> None:
+        self.secret_key, self.algorithm, self.expires_seconds, self.issuer = (
+            secret_key,
+            algorithm,
+            expires_seconds,
+            issuer,
+        )
 
-    def issue(self, *, subject: str, claims: Mapping[str, Any] | None = None, expires_at: datetime | None = None) -> str:
-        now = datetime.now(timezone.utc)
+    def issue(
+        self,
+        *,
+        subject: str,
+        claims: Mapping[str, Any] | None = None,
+        expires_at: datetime | None = None,
+    ) -> str:
+        now = datetime.now(UTC)
         expiration = expires_at or now + timedelta(seconds=self.expires_seconds)
-        payload: dict[str, Any] = {"sub": subject, "iat": now, "exp": expiration, "iss": self.issuer}
+        payload: dict[str, Any] = {
+            "sub": subject,
+            "iat": now,
+            "exp": expiration,
+            "iss": self.issuer,
+        }
         if claims:
             payload.update(claims)
         return jwt.encode(payload, self.secret_key, algorithm=self.algorithm)
 
     def verify(self, token: str) -> Mapping[str, Any]:
         try:
-            claims = jwt.decode(token, self.secret_key, algorithms=[self.algorithm], issuer=self.issuer)
+            claims = jwt.decode(
+                token, self.secret_key, algorithms=[self.algorithm], issuer=self.issuer
+            )
             if not claims.get("sub"):
                 raise AuthenticationError("token subject is missing")
             return claims

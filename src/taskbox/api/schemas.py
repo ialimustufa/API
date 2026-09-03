@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from taskbox.domain.models import ProjectRole, TaskStatus, UserStatus
@@ -127,4 +128,20 @@ class HealthResponse(BaseModel):
     status: str = "ok"
 
 
-__all__ = ["HealthResponse", "LoginRequest", "MembershipCreate", "MembershipResponse", "MembershipUpdate", "PageResponse", "ProjectCreate", "ProjectResponse", "ProjectUpdate", "RegisterRequest", "TaskCreate", "TaskResponse", "TaskUpdate", "TokenResponse", "UserResponse"]
+__all__ = [
+    "HealthResponse",
+    "LoginRequest",
+    "MembershipCreate",
+    "MembershipResponse",
+    "MembershipUpdate",
+    "PageResponse",
+    "ProjectCreate",
+    "ProjectResponse",
+    "ProjectUpdate",
+    "RegisterRequest",
+    "TaskCreate",
+    "TaskResponse",
+    "TaskUpdate",
+    "TokenResponse",
+    "UserResponse",
+]

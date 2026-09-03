@@ -8,8 +8,9 @@ from __future__ import annotations
 import json
 import os
 import uuid
+from collections.abc import Callable
 from functools import wraps
-from typing import Any, Callable, TypeVar
+from typing import Any, TypeVar
 
 from flask import Flask, Response, current_app, g, jsonify, request
 
@@ -77,9 +78,7 @@ def _require_auth(view: F) -> F:
                 "Configure LEGACY_API_PASSWORD_HASH before using write operations.",
                 "authentication_not_configured",
             )
-        if not authenticate(
-            request.headers.get("Authorization"), username, password_hash
-        ):
+        if not authenticate(request.headers.get("Authorization"), username, password_hash):
             return _problem(
                 401,
                 "Authentication required",
@@ -153,9 +152,7 @@ def create_app(test_config: dict[str, object] | None = None) -> Flask:
             author=request.args.get("author"), query=request.args.get("q")
         )
         if joke is None:
-            return _not_found(
-                "No joke matched the requested filters.", "joke_not_found"
-            )
+            return _not_found("No joke matched the requested filters.", "joke_not_found")
         return _joke_response(joke)
 
     @app.get("/api/v1/jokes/<int:joke_id>")
@@ -228,9 +225,7 @@ def _positive_int(value: str, field: str) -> int:
 
 def _validation_problem(error: ValidationError) -> Response:
     errors = [{"field": error.field, "message": str(error)}] if error.field else None
-    return _problem(
-        422, "Validation failed", str(error), "validation_failed", errors=errors
-    )
+    return _problem(422, "Validation failed", str(error), "validation_failed", errors=errors)
 
 
 def _malformed_json_problem(error: MalformedJSONError) -> Response:

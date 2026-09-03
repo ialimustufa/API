@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from datetime import datetime
-from typing import Any, Mapping, Protocol, Sequence
+from typing import Any, Protocol
 
 from taskbox.domain.models import Membership, Project, Task, User
+
 from .repositories import Page
 
 
@@ -16,7 +18,13 @@ class PasswordHasher(Protocol):
 
 
 class TokenIssuer(Protocol):
-    def issue(self, *, subject: str, claims: Mapping[str, Any] | None = None, expires_at: datetime | None = None) -> str: ...
+    def issue(
+        self,
+        *,
+        subject: str,
+        claims: Mapping[str, Any] | None = None,
+        expires_at: datetime | None = None,
+    ) -> str: ...
 
     def verify(self, token: str) -> Mapping[str, Any]: ...
 
@@ -50,21 +58,43 @@ class AuthService(Protocol):
 class ProjectService(Protocol):
     def create(self, *, actor_id: str, name: str, description: str | None = None) -> Project: ...
 
-    def list(self, *, actor_id: str, cursor: str | None = None, limit: int = 50) -> Page[Project]: ...
+    def list(
+        self, *, actor_id: str, cursor: str | None = None, limit: int = 50
+    ) -> Page[Project]: ...
 
-    def add_member(self, *, actor_id: str, project_id: str, user_id: str, role: str) -> Membership: ...
+    def add_member(
+        self, *, actor_id: str, project_id: str, user_id: str, role: str
+    ) -> Membership: ...
 
 
 class TaskService(Protocol):
-    def create(self, *, actor_id: str, project_id: str, title: str, description: str | None = None, **fields: Any) -> Task: ...
+    def create(
+        self,
+        *,
+        actor_id: str,
+        project_id: str,
+        title: str,
+        description: str | None = None,
+        **fields: Any,
+    ) -> Task: ...
 
     def get(self, *, actor_id: str, task_id: str) -> Task: ...
 
-    def list(self, *, actor_id: str, project_id: str, cursor: str | None = None, limit: int = 50, **filters: Any) -> Page[Task]: ...
+    def list(
+        self,
+        *,
+        actor_id: str,
+        project_id: str,
+        cursor: str | None = None,
+        limit: int = 50,
+        **filters: Any,
+    ) -> Page[Task]: ...
 
 
 class WebhookImportService(Protocol):
-    def import_tasks(self, *, payload: bytes, signature: str, event_id: str, actor_id: str | None = None) -> Sequence[Task]: ...
+    def import_tasks(
+        self, *, payload: bytes, signature: str, event_id: str, actor_id: str | None = None
+    ) -> Sequence[Task]: ...
 
 
 __all__ = [

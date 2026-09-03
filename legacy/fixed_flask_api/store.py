@@ -13,14 +13,10 @@ class JokeStore:
 
     def __init__(self, seed: list[Joke] | None = None) -> None:
         self._lock = RLock()
-        self._jokes: dict[int, Joke] = {
-            joke.id: joke for joke in (seed or default_jokes())
-        }
+        self._jokes: dict[int, Joke] = {joke.id: joke for joke in (seed or default_jokes())}
         self._next_id = max(self._jokes, default=-1) + 1
 
-    def list(
-        self, *, author: str | None = None, query: str | None = None
-    ) -> list[Joke]:
+    def list(self, *, author: str | None = None, query: str | None = None) -> list[Joke]:
         author_term = author.casefold() if author else None
         query_term = query.casefold() if query else None
         with self._lock:
@@ -31,8 +27,7 @@ class JokeStore:
             result = [
                 item
                 for item in result
-                if query_term in item.author.casefold()
-                or query_term in item.joke.casefold()
+                if query_term in item.author.casefold() or query_term in item.joke.casefold()
             ]
         return sorted(result, key=lambda item: item.id)
 
@@ -40,9 +35,7 @@ class JokeStore:
         with self._lock:
             return self._jokes.get(joke_id)
 
-    def random(
-        self, *, author: str | None = None, query: str | None = None
-    ) -> Joke | None:
+    def random(self, *, author: str | None = None, query: str | None = None) -> Joke | None:
         # Deterministic selection of the first matching record is friendlier to
         # examples and tests than making randomness part of the API contract.
         return next(iter(self.list(author=author, query=query)), None)
@@ -54,9 +47,7 @@ class JokeStore:
             self._next_id += 1
             return item
 
-    def replace(
-        self, joke_id: int, *, author: str, joke: str, source: str | None
-    ) -> Joke | None:
+    def replace(self, joke_id: int, *, author: str, joke: str, source: str | None) -> Joke | None:
         with self._lock:
             current = self._jokes.get(joke_id)
             if current is None:

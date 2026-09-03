@@ -1,5 +1,6 @@
 from uuid import UUID, uuid4
-from fastapi import FastAPI, HTTPException, status
+
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 app = FastAPI(title="Notes API")

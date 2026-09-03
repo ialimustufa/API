@@ -19,7 +19,6 @@ from typing import Any
 import pytest
 from werkzeug.security import generate_password_hash
 
-
 USERNAME = "contract-user"
 PASSWORD = "contract-password"
 
@@ -170,7 +169,9 @@ def test_pagination_bounds_are_problem_details(client: Any) -> None:
         ({"author": "Ada", "joke": "x", "id": 10}, 422),
     ],
 )
-def test_create_validation_uses_problem_details(client: Any, body: dict[str, Any], expected_status: int) -> None:
+def test_create_validation_uses_problem_details(
+    client: Any, body: dict[str, Any], expected_status: int
+) -> None:
     response = client.post(
         "/api/v1/jokes",
         json=body,
@@ -316,8 +317,16 @@ def test_documented_route_methods_never_return_500(client: Any) -> None:
         ("GET", "/api/v1/jokes", {}),
         ("GET", "/api/v1/jokes/random", {}),
         ("GET", "/api/v1/jokes/0", {}),
-        ("POST", "/api/v1/jokes", {"json": {"author": "Ada", "joke": "x"}, "headers": {"Authorization": _auth_header()}}),
-        ("PUT", "/api/v1/jokes/0", {"json": {"author": "Ada", "joke": "x"}, "headers": {"Authorization": _auth_header()}}),
+        (
+            "POST",
+            "/api/v1/jokes",
+            {"json": {"author": "Ada", "joke": "x"}, "headers": {"Authorization": _auth_header()}},
+        ),
+        (
+            "PUT",
+            "/api/v1/jokes/0",
+            {"json": {"author": "Ada", "joke": "x"}, "headers": {"Authorization": _auth_header()}},
+        ),
         ("DELETE", "/api/v1/jokes/0", {"headers": {"Authorization": _auth_header()}}),
         ("POST", "/health/live", {}),
         ("PUT", "/health/live", {}),

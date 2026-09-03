@@ -1,4 +1,5 @@
 """Minimal HTTP integration smoke test (enabled when the app composition root exists)."""
+
 from __future__ import annotations
 
 import importlib

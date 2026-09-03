@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Check generated OpenAPI routes against the committed course contract."""
+
 from __future__ import annotations
 
 import argparse

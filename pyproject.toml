@@ -40,6 +40,14 @@ pythonpath = ["."]
 [tool.ruff]
 line-length = 100
 target-version = "py313"
+extend-exclude = ["course/labs/**/starter/**"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"legacy/fixed_flask_api/app.py" = ["UP047"]
+"src/taskbox/adapters/sqlite.py" = ["E501"]
+"src/taskbox/domain/__init__.py" = ["F403"]
+"src/taskbox/ports/__init__.py" = ["F403"]

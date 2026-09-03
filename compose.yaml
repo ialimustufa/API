@@ -1,29 +1,13 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-taskbox}
-      POSTGRES_USER: ${POSTGRES_USER:-taskbox}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-taskbox}
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    volumes:
-      - taskbox_pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-taskbox} -d ${POSTGRES_DB:-taskbox}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
   app:
     build: .
     environment:
-      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-taskbox}:${POSTGRES_PASSWORD:-taskbox}@postgres:5432/${POSTGRES_DB:-taskbox}
-      JWT_SECRET: ${JWT_SECRET:-change-me-in-development}
-      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-change-me-in-development}
+      TASKBOX_DATABASE_URL: sqlite:////data/taskbox.db
+      TASKBOX_JWT_SECRET: ${TASKBOX_JWT_SECRET:-change-me-in-development}
+      TASKBOX_WEBHOOK_SECRET: ${TASKBOX_WEBHOOK_SECRET:-change-me-in-development}
     ports:
       - "8000:8000"
-    depends_on:
-      postgres:
-        condition: service_healthy
+    volumes:
+      - taskbox_data:/data
 volumes:
-  taskbox_pgdata:
+  taskbox_data:

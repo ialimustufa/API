@@ -1,4 +1,8 @@
-import hashlib, hmac, json, time
+import hashlib
+import hmac
+import json
+import time
+
 secret = b"dev-webhook-secret"
 timestamp = int(time.time())
 body = json.dumps({"id": "evt_1", "type": "task.created"}).encode()

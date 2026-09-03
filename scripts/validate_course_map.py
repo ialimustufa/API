@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Validate course-map invariants without requiring PyYAML."""
+
 from __future__ import annotations
 
 import re

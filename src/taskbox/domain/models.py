@@ -130,7 +130,11 @@ class Task:
         if self.description is not None and len(self.description) > 10000:
             raise ValidationError("description must be at most 10000 characters")
         self.status = TaskStatus(self.status)
-        if not isinstance(self.priority, int) or isinstance(self.priority, bool) or not 0 <= self.priority <= 4:
+        if (
+            not isinstance(self.priority, int)
+            or isinstance(self.priority, bool)
+            or not 0 <= self.priority <= 4
+        ):
             raise ValidationError("priority must be an integer between 0 and 4")
 
 

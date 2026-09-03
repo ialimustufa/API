@@ -43,6 +43,10 @@ export default defineConfig({
         {
           label: 'Course modules',
           items: [
+            { label: '01 · HTTP and API design', slug: 'modules/01-http-api-design' },
+            { label: '02 · FastAPI foundations', slug: 'modules/02-fastapi-foundations' },
+            { label: '03 · Resource CRUD', slug: 'modules/03-resource-crud' },
+            { label: '04 · Testing and clients', slug: 'modules/04-testing-clients' },
             { label: '05 · Authentication and security', slug: 'modules/05-auth-security' },
             { label: '06 · Persistence', slug: 'modules/06-persistence' },
             { label: '07 · Operations', slug: 'modules/07-operations' },

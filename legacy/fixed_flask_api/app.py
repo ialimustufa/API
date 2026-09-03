@@ -61,7 +61,9 @@ def _json_body() -> object:
 
 
 def _joke_response(joke: Any, status: int = 200) -> Response:
-    return jsonify(joke.as_dict()), status
+    response = jsonify(joke.as_dict())
+    response.status_code = status
+    return response
 
 
 def _require_auth(view: F) -> F:
@@ -130,7 +132,7 @@ def create_app(test_config: dict[str, object] | None = None) -> Flask:
         except MalformedJSONError as exc:
             return _malformed_json_problem(exc)
         except ValidationError as exc:
-            return _validation_problem(exc)
+            return _problem(400, "Invalid pagination", str(exc), "invalid_pagination")
         items = app.extensions["joke_store"].list(
             author=request.args.get("author"), query=request.args.get("q")
         )
@@ -194,7 +196,9 @@ def create_app(test_config: dict[str, object] | None = None) -> Flask:
     def delete_joke(joke_id: int) -> Response:
         if not app.extensions["joke_store"].delete(joke_id):
             return _not_found(f"Joke {joke_id} was not found.", "joke_not_found")
-        return Response(status=204)
+        response = Response(status=204)
+        response.headers.pop("Content-Type", None)
+        return response
 
     @app.errorhandler(404)
     def handle_404(error: Any) -> Response:

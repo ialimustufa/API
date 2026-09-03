@@ -1,0 +1,35 @@
+openapi: 3.1.0
+info:
+  title: Hello API (starter)
+  version: 1.0.0
+paths:
+  /api/v1/hello:
+    get:
+      summary: Return a greeting
+      responses:
+        '200':
+          description: TODO: describe the JSON response
+  /api/v1/echo:
+    post:
+      summary: Echo a message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EchoRequest'
+      responses:
+        '200':
+          description: TODO
+        '400':
+          description: TODO: document the error response
+components:
+  schemas:
+    EchoRequest:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          minLength: 1
+          maxLength: 200

@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: taskbox
+      POSTGRES_USER: taskbox
+      POSTGRES_PASSWORD: taskbox-dev-only
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U taskbox -d taskbox"], interval: 5s, timeout: 3s, retries: 10}
+  api:
+    build: .
+    environment: {TASKBOX_DATABASE_URL: postgresql+psycopg://taskbox:taskbox-dev-only@db:5432/taskbox}
+    depends_on: {db: {condition: service_healthy}}
+    ports: ["8007:8000"]

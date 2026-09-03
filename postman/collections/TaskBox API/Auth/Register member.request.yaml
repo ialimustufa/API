@@ -1,0 +1,32 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/api/v1/auth/register'
+order: 4000
+description: |-
+  Creates the secondary user used to exercise membership roles. Returns 201; duplicate email returns 409; invalid input returns 422.
+auth:
+  type: noauth
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "{{member_email}}",
+      "password": "{{member_password}}",
+      "display_name": "{{member_display_name}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Member registration returns 201', function () {
+        pm.response.to.have.status(201);
+      });
+      const body = pm.response.json();
+      pm.test('Member user response is complete', function () {
+        pm.expect(body).to.include.all.keys('id', 'email', 'display_name', 'status', 'created_at', 'updated_at');
+        pm.expect(body.status).to.eql('active');
+      });
+      pm.collectionVariables.set('member_id', body.id);

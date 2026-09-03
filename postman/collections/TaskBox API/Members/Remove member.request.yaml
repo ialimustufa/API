@@ -1,0 +1,19 @@
+$kind: http-request
+method: DELETE
+url: '{{base_url}}/api/v1/projects/:project_id/members/:user_id'
+order: 8000
+description: |-
+  Owner-only membership removal. Removing the owner returns 409; a missing membership returns 404. Run after member-role workflow checks and before project deletion.
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+  - key: user_id
+    value: '{{member_id}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Membership removal returns empty 204', function () {
+        pm.response.to.have.status(204);
+        pm.expect(pm.response.text()).to.eql('');
+      });

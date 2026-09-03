@@ -1,0 +1,7 @@
+$kind: collection
+name: Health
+description: |-
+  Unauthenticated process probes. `/healthz` and `/livez` report process liveness. `/readyz` additionally executes `SELECT 1` against the configured SQLite connection. `/livez` and `/readyz` are implemented but intentionally excluded from generated OpenAPI.
+
+  Course mapping: this folder directly supports operations outcomes in `course/labs/07-operations/README.md` and the smoke-test/readiness acceptance work in `course/labs/11-capstone-deployment/README.md`. Send these first; readiness should become non-2xx when its database dependency is unavailable.
+order: 1000

@@ -1,0 +1,12 @@
+$kind: collection
+name: Webhooks
+description: |-
+  Signed, idempotent task import. A before-request script computes HMAC-SHA256 over the exact substituted raw body using `webhook_secret` and sets `X-Webhook-Signature`. `X-Webhook-Event-ID` is the idempotency key. Reuse returns 409 `duplicate_webhook`; use a new ID only for a new business event. Verification precedes JSON parsing and authorization. An owner/editor Bearer token is used here; alternatively omit it and provide a valid `actor_id` in the signed body.
+
+  Course mapping: this folder is the integrated TaskBox companion to `course/labs/10-webhooks-events/README.md` and the signed-import acceptance path in `course/labs/11-capstone-deployment/README.md`. Send once with a new event ID, verify imported state, then replay the same event ID to test the expected idempotency conflict.
+order: 6000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{owner_access_token}}'

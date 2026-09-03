@@ -40,6 +40,10 @@ class AuthApplicationService:
         self, uow_factory: Callable[[], UnitOfWork], hasher: PasswordHasher, tokens: TokenIssuer
     ) -> None:
         self.uow_factory, self.hasher, self.tokens = uow_factory, hasher, tokens
+        # Use a real hash for failed lookups so a missing account does not skip
+        # the expensive password-verification path. This narrows, but does not
+        # eliminate, timing differences; public endpoints still need rate limits.
+        self._missing_user_password_hash = self.hasher.hash("taskbox-missing-user-password")
 
     def register(self, *, email: str, password: str, display_name: str) -> User:
         if len(password) < 8:
@@ -56,10 +60,12 @@ class AuthApplicationService:
     def authenticate(self, *, email: str, password: str) -> str:
         with self.uow_factory() as uow:
             user = uow.users.get_by_email(email)
+            password_hash = user.password_hash if user else self._missing_user_password_hash
+            password_is_valid = self.hasher.verify(password, password_hash)
             if (
                 not user
                 or user.status is not UserStatus.ACTIVE
-                or not self.hasher.verify(password, user.password_hash)
+                or not password_is_valid
             ):
                 raise AuthenticationError("invalid email or password")
             return self.tokens.issue(subject=user.id)

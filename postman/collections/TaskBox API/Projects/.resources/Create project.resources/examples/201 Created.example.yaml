@@ -1,0 +1,23 @@
+$kind: http-example
+name: 201 Created
+request:
+  url: '{{base_url}}/api/v1/projects'
+  method: POST
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    - key: Content-Type
+      value: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "c5d95506-ab1d-48d7-83b5-288e89d55947",
+        "owner_id": "5f6889f6-35fd-4af0-97a7-90cd57070bf8",
+        "name": "Postman workflow project",
+        "description": "Local verification of TaskBox.",
+        "created_at": "2030-01-01T12:05:00Z",
+        "updated_at": "2030-01-01T12:05:00Z"
+      }
+order: 1000

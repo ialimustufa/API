@@ -1,0 +1,26 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/api/v1/projects'
+order: 1000
+description: |-
+  Lists projects visible to the authenticated user. Returns `{items, next_cursor}` ordered by creation time and UUID. `limit` must be 1-100; cursor is opaque. An invalid cursor returns 400 `invalid_cursor`.
+queryParams:
+  - key: limit
+    value: '50'
+    description: Page size from 1 through 100.
+  - key: cursor
+    value: '{{cursor}}'
+    description: Opaque continuation token from a prior response.
+    disabled: true
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Project list returns 200', function () { pm.response.to.have.status(200); });
+      const body = pm.response.json();
+      pm.test('Project list is paginated', function () {
+        pm.expect(body.items).to.be.an('array');
+        pm.expect(body).to.have.property('next_cursor');
+      });
+      if (body.next_cursor) pm.collectionVariables.set('cursor', body.next_cursor);
+examples: './.resources/List projects.resources/examples'

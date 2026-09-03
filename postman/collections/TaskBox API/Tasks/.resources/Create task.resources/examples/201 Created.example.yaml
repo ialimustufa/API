@@ -1,0 +1,28 @@
+$kind: http-example
+name: 201 Created
+request:
+  url: '{{base_url}}/api/v1/projects/{{project_id}}/tasks'
+  method: POST
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    - key: Content-Type
+      value: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "278195c1-ad44-4c2f-9e92-e074e7c5151f",
+        "project_id": "c5d95506-ab1d-48d7-83b5-288e89d55947",
+        "created_by": "5f6889f6-35fd-4af0-97a7-90cd57070bf8",
+        "assignee_id": "112e4c0a-8889-437e-9b5d-e6cbf8d1a839",
+        "title": "Verify the TaskBox API",
+        "description": "Exercise the local collection.",
+        "status": "todo",
+        "priority": 2,
+        "due_at": "2030-01-15T17:00:00Z",
+        "created_at": "2030-01-01T12:15:00Z",
+        "updated_at": "2030-01-01T12:15:00Z"
+      }
+order: 1000

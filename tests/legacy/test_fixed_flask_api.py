@@ -190,6 +190,17 @@ def test_malformed_json_is_bad_request(client: Any) -> None:
     _assert_problem(response, 400)
 
 
+def test_put_malformed_json_is_bad_request(client: Any) -> None:
+    response = client.put(
+        "/api/v1/jokes/0",
+        data="{not-json",
+        content_type="application/json",
+        headers={"Authorization": _auth_header()},
+    )
+
+    assert _assert_problem(response, 400)["code"] == "malformed_json"
+
+
 def test_writes_require_basic_auth_and_advertise_challenge(client: Any) -> None:
     for method, path in (
         ("post", "/api/v1/jokes"),

@@ -1,0 +1,15 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/api/v1/projects/:project_id'
+order: 3000
+description: |-
+  Reads a project after verifying caller membership. A missing project returns 404; an authenticated non-member returns 403.
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Project retrieval returns 200', function () { pm.response.to.have.status(200); });
+      pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get('project_id'));

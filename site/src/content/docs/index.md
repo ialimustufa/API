@@ -6,16 +6,16 @@ hero:
   tagline: Python 3.13 · FastAPI · SQLite · PostgreSQL
   actions:
     - text: Start the course
-      link: /setup/
+      link: ./setup/
       icon: right-arrow
     - text: See the TaskBox API
-      link: /taskbox/domain-and-routes/
+      link: ./taskbox/domain-and-routes/
       icon: external
 ---
 
 TaskBox is a small, complete API that gives you room to practice the decisions that matter in real services: authentication, authorization, persistence, pagination, and webhooks.
 
-Start with [environment setup](/setup/), then follow the chapters in order. The
+Start with [environment setup](./setup/), complete [Prerequisite 00: Postman foundations](./modules/00-postman-prerequisite/), then follow the numbered chapters in order. The required prerequisite appears before Lab 01 and brings the complete course to 43 hours. The
 course uses a deliberately small reference application so each boundary is
 inspectable: HTTP contracts at the edge, domain rules in the middle, and
 replaceable adapters at the infrastructure boundary.

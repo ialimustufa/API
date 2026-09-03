@@ -1,0 +1,23 @@
+$kind: http-example
+name: 409 Conflict
+request:
+  url: '{{base_url}}/api/v1/auth/register'
+  method: POST
+response:
+  statusCode: 409
+  statusText: Conflict
+  headers:
+    - key: Content-Type
+      value: application/problem+json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "https://taskbox.dev/problems/conflict",
+        "title": "Conflict",
+        "status": 409,
+        "detail": "email is already registered",
+        "instance": "http://127.0.0.1:8000/api/v1/auth/register",
+        "code": "conflict"
+      }
+order: 2000

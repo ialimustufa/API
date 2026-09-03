@@ -1,0 +1,28 @@
+$kind: http-request
+method: PATCH
+url: '{{base_url}}/api/v1/tasks/:task_id'
+order: 4000
+description: |-
+  Owner/editor partial update. Only supplied fields change. Explicit null clears description, assignee_id, or due_at. Invalid enum/priority/length values return 422.
+pathVariables:
+  - key: task_id
+    value: '{{task_id}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "status": "done",
+      "priority": 3,
+      "description": "Completed by the Postman workflow."
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Task update returns 200', function () { pm.response.to.have.status(200); });
+      const body = pm.response.json();
+      pm.expect(body.status).to.eql('done');
+      pm.expect(body.priority).to.eql(3);

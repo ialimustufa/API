@@ -1,0 +1,17 @@
+$kind: http-request
+method: DELETE
+url: '{{base_url}}/api/v1/tasks/:task_id'
+order: 8000
+description: |-
+  Owner/editor task deletion. Returns 204 with no response body. A viewer receives 403 and a missing task returns 404.
+pathVariables:
+  - key: task_id
+    value: '{{task_id}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Task deletion returns empty 204', function () {
+        pm.response.to.have.status(204);
+        pm.expect(pm.response.text()).to.eql('');
+      });

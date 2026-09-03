@@ -65,7 +65,7 @@ Task creation accepts `title` (1–240 characters), optional `description` (up t
 Expected domain failures use RFC 9457-style `application/problem+json`. For example, an unauthenticated request returns `401` and a Bearer challenge:
 
 ```json
-{"type":"https://taskbox.dev/problems/authentication_required","title":"Authentication Required","status":401,"detail":"authentication required","instance":"http://127.0.0.1:8000/api/v1/me","code":"authentication_required"}
+{"type":"http://127.0.0.1:8000/problems/authentication_required","title":"Authentication Required","status":401,"detail":"authentication required","instance":"http://127.0.0.1:8000/api/v1/me","code":"authentication_required"}
 ```
 
 Malformed JSON fields are `422` with an `errors` array; missing resources are `404`; insufficient membership or role is `403`; duplicate email or membership is `409`. Clients should branch on `code`, not scrape `detail` text.

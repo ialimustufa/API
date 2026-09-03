@@ -1,0 +1,19 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/api/v1/tasks/:task_id'
+order: 5000
+description: |-
+  Authorization example: a project viewer/editor can read a task. Overrides folder auth with the member token.
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{member_access_token}}'
+pathVariables:
+  - key: task_id
+    value: '{{task_id}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Project member can read a task', function () { pm.response.to.have.status(200); });

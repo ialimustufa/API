@@ -1,0 +1,12 @@
+$kind: collection
+name: Members
+description: |-
+  Project-scoped membership management. Any project member may list memberships; only the owner may add, update, or remove them. Assignable roles are `editor` and `viewer`; `owner` is reserved. Re-adding a member is 409, missing users/memberships are 404, and removing the owner is 409.
+
+  Course mapping: these requests turn the owner/editor/viewer policy from `course/labs/05-auth-security/README.md` into executable authorization checks and support the integration/testing outcomes in `course/labs/04-testing-client-usage/README.md` and `course/labs/11-capstone-deployment/README.md`. Create the project and both user tokens before running this folder.
+order: 4000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{owner_access_token}}'

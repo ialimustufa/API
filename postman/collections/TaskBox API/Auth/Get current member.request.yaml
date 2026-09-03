@@ -1,0 +1,20 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/api/v1/me'
+order: 6000
+description: |-
+  Confirms that the secondary JWT resolves to the captured member identity.
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{member_access_token}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Current member returns 200', function () {
+        pm.response.to.have.status(200);
+      });
+      const body = pm.response.json();
+      pm.expect(body.id).to.eql(pm.collectionVariables.get('member_id'));

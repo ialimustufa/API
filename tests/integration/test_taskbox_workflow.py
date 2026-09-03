@@ -34,6 +34,55 @@ def _bearer(token: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {token}"}
 
 
+def test_problem_type_uses_the_request_host() -> None:
+    app = create_app(database_url="sqlite:///:memory:")
+
+    with TestClient(app, base_url="http://127.0.0.1:8000") as client:
+        first = client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "duplicate@example.com",
+                "password": "correct-horse-battery-staple",
+                "display_name": "Duplicate",
+            },
+        )
+        duplicate = client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "duplicate@example.com",
+                "password": "correct-horse-battery-staple",
+                "display_name": "Duplicate",
+            },
+        )
+
+    assert first.status_code == 201
+    assert duplicate.status_code == 409
+    assert duplicate.json()["type"] == "http://127.0.0.1:8000/problems/conflict"
+
+
+def test_unknown_login_still_runs_password_verification(monkeypatch) -> None:
+    app = create_app(database_url="sqlite:///:memory:")
+    hasher = app.state.services.auth.hasher
+    verification_calls: list[tuple[str, str]] = []
+
+    def verify(password: str, password_hash: str) -> bool:
+        verification_calls.append((password, password_hash))
+        return False
+
+    monkeypatch.setattr(hasher, "verify", verify)
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/auth/token",
+            json={"email": "missing@example.com", "password": "incorrect-password"},
+        )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "invalid email or password"
+    assert verification_calls == [
+        ("incorrect-password", app.state.services.auth._missing_user_password_hash)
+    ]
+
+
 def test_authenticated_project_task_and_webhook_workflow() -> None:
     webhook_secret = "integration-webhook-secret"
     app = create_app(
@@ -108,11 +157,25 @@ def test_authenticated_project_task_and_webhook_workflow() -> None:
             "X-Webhook-Signature": f"sha256={signature}",
         }
 
+        missing_event_id = client.post(
+            "/api/v1/webhooks/tasks/import",
+            content=payload,
+            headers={"X-Webhook-Signature": f"sha256={signature}"},
+        )
+        assert missing_event_id.status_code == 422
+
+        altered_body = client.post(
+            "/api/v1/webhooks/tasks/import",
+            content=payload + b" ",
+            headers=webhook_headers,
+        )
+        assert altered_body.status_code == 401
+
         imported = client.post(
             "/api/v1/webhooks/tasks/import", content=payload, headers=webhook_headers
         )
         assert imported.status_code == 202
-        assert imported.json()["imported"] == 1
+        assert imported.json() == {"event_id": "evt-integration-1", "imported": 1}
 
         duplicate = client.post(
             "/api/v1/webhooks/tasks/import", content=payload, headers=webhook_headers

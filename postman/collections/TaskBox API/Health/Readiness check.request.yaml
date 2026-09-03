@@ -1,0 +1,16 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/readyz'
+order: 3000
+description: |-
+  Public readiness endpoint implemented by the app but excluded from OpenAPI. Executes `SELECT 1` using the configured SQLite connection, then returns 200 with `status: ok`.
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Readiness returns 200 and ok', function () {
+        pm.response.to.have.status(200);
+        pm.expect(pm.response.json()).to.eql({ status: 'ok' });
+      });

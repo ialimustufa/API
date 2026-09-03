@@ -1,0 +1,28 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/api/v1/auth/token'
+order: 5000
+description: |-
+  Exchanges secondary-user credentials for a Bearer JWT and stores it for member authorization checks.
+auth:
+  type: noauth
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "{{member_email}}",
+      "password": "{{member_password}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Member token exchange returns 200', function () {
+        pm.response.to.have.status(200);
+      });
+      const body = pm.response.json();
+      pm.expect(body.token_type).to.eql('bearer');
+      pm.collectionVariables.set('member_access_token', body.access_token);

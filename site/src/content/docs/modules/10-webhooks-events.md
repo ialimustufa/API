@@ -41,7 +41,7 @@ Do not hold the HTTP request open while making an email call or importing a larg
 
 ## Practice and verification
 
-Run the signer in [course/examples/webhooks/sign.py](https://github.com/ialimustufa/API/blob/main/course/examples/webhooks/sign.py) to produce a development header and body, then send them to the Lab 10 solution. The [Lab 10 README and source](https://github.com/ialimustufa/API/tree/main/course/labs/10-webhooks-events) describe the expected contract. Test a valid event, a changed body, wrong secret, stale timestamp, malformed header, missing ID, and the same valid event twice. The duplicate should be acknowledged safely and should create only one side effect.
+Run the timestamped Lab 10 signer in [course/examples/webhooks/sign.py](https://github.com/ialimustufa/API/blob/main/course/examples/webhooks/sign.py) only against the Lab 10 solution. It emits `X-TaskBox-Signature: t=...,v1=...`, which is intentionally different from the TaskBox reference API. For TaskBox, use [course/examples/webhooks/sign_taskbox.py](https://github.com/ialimustufa/API/blob/main/course/examples/webhooks/sign_taskbox.py); it emits the event-ID and raw-body HMAC headers documented on the TaskBox signed-webhooks page. Test a valid event, a changed body, wrong secret, stale timestamp, malformed header, missing ID, and the same valid event twice. The duplicate should be acknowledged safely and should create only one side effect.
 
 Exercise: add a durable event status (`received`, `processed`, `failed`) and a retry worker with bounded attempts. Document whether a permanently failed event can be replayed manually and how an operator proves that replay is safe.
 

@@ -1,0 +1,12 @@
+$kind: collection
+name: Tasks
+description: |-
+  Task CRUD and filtered cursor listing. Any project member may read. Owners/editors may create, patch, and delete; viewers receive 403. `title` is 1-240 characters, description up to 10,000, status is `todo|in_progress|done|archived`, priority is 0-4, and due_at is an ISO 8601 datetime. PATCH can clear description, assignee_id, or due_at with explicit null.
+
+  Course mapping: this is the main executable resource lifecycle for `course/labs/03-crud/README.md`, the request/assertion companion to `course/labs/04-testing-client-usage/README.md`, a durable-state example for `course/labs/06-persistence/README.md`, and a central part of `course/labs/11-capstone-deployment/README.md`. Member-specific requests demonstrate the Lab 05 role outcomes.
+order: 5000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{owner_access_token}}'

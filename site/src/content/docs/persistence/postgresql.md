@@ -42,14 +42,14 @@ It starts only `app`, publishes `http://127.0.0.1:8000`, sets `TASKBOX_DATABASE_
 
 ## Migration thinking
 
-Apply the portable schema in `migrations/001_initial.sql` (or the lab's migration solution) to the target PostgreSQL database before traffic. Do not copy a SQLite file into PostgreSQL. Run migrations, verify constraints and indexes, then start the app: database reachable → migration succeeds → API starts → readiness passes.
+Use a reviewed, versioned PostgreSQL schema-change process before traffic. The reference app's SQLite bootstrap DDL is not a deployable migration history and must not be copied into PostgreSQL as a deployment step. Apply the schema change, verify constraints and indexes, then start the app: database reachable → schema change succeeds → API starts → readiness passes.
 
 The initial SQL uses portable `TEXT` for UUID strings and ISO-8601 UTC timestamps, keeping domain behavior comparable. Still check engine-specific behavior: foreign-key enforcement, uniqueness, transaction isolation, timestamp ordering, and cursor query plans. Compatibility means preserving the application contract, not pretending engines are identical.
 
 ## Exercises
 
 1. Run `docker compose config` and annotate the dependency graph. Why does `depends_on` use `condition: service_healthy`?
-2. Break the password or host in `TASKBOX_DATABASE_URL`, restart the API, and distinguish DNS, authentication, and migration/schema failures from logs.
+2. Break the password or host in `TASKBOX_DATABASE_URL`, restart the API, and distinguish DNS, authentication, and schema failures from logs.
 3. Apply the schema, register a user, create a project and task, then restart only the API. Confirm rows remain while `db` runs.
 4. Compare cursor-paginated task queries in SQLite and PostgreSQL. Keep route responses, authorization, and cursor shape unchanged.
 5. Interrupt a multi-write operation and inspect for partial state. Write a rollback and retry note.
@@ -64,7 +64,7 @@ The initial SQL uses portable `TEXT` for UUID strings and ISO-8601 UTC timestamp
 
 **Data disappeared.** Lab 07 has no persistent volume. Root Compose data is in `taskbox_data`; avoid `down -v` unless deletion is intentional.
 
-**Readiness fails.** Inspect API logs, verify URL and credentials, and confirm migration ran against database `taskbox`. Process health does not prove dependency readiness.
+**Readiness fails.** Inspect API logs, verify URL and credentials, and confirm the expected schema is present in database `taskbox`. Process health does not prove dependency readiness.
 
 ## Outcome
 

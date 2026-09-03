@@ -1,0 +1,23 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/api/v1/projects/:project_id/members'
+order: 1000
+description: |-
+  Lists project memberships for any authenticated member. Uses cursor pagination with `limit` 1-100 and returns `{items, next_cursor}`.
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+queryParams:
+  - key: limit
+    value: '50'
+  - key: cursor
+    value: '{{cursor}}'
+    disabled: true
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Membership list returns 200', function () { pm.response.to.have.status(200); });
+      const body = pm.response.json();
+      pm.expect(body.items).to.be.an('array');
+      pm.expect(body).to.have.property('next_cursor');

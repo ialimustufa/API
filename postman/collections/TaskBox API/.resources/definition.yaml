@@ -1,0 +1,124 @@
+$kind: collection
+name: TaskBox API
+description: |-
+  # API Engineering with TaskBox course collection
+
+  This is the runnable Postman companion to the repository's **API Engineering with TaskBox** course. The course takes learners from beginner API design to a production-minded FastAPI capstone using Python, SQLite, authentication, testing, webhooks, observability, and deployment practices. It is self-paced, designed as an approximately 43-hour sequence, and contains required Prerequisite 00 plus Labs 01-11. The authoritative sequence and outcomes are in `course/course-map.yml`; repository setup is in `README.md`; each exercise is under `course/labs/`.
+
+  Complete `course/labs/00-postman-prerequisite/README.md` before Lab 01. It teaches this local collection layout, live requests/responses, variables and scopes, environment overrides and secret hygiene, inherited/request authorization, scripts and tests, saved examples, workflow runs, and course documentation without changing request behavior.
+
+  ## Audience, format, and prerequisites
+
+  The material is for learners building practical API-engineering skills, while the complete TaskBox workflow also supports experienced developers who want an executable reference. Use Python 3.13+, Node 24 LTS, and `uv`. From the repository root run `uv sync --all-groups --frozen`, then start TaskBox with `uv run uvicorn taskbox.main:app --reload`. The collection's `base_url` defaults to `http://127.0.0.1:8000`; generated API documentation is at `http://127.0.0.1:8000/docs`. The optional course site starts with `cd site && npm ci && npm run dev`.
+
+  A persistent `taskbox.db` means repeated registration can return 409. Change `owner_email` and `member_email`, or reset only a disposable local database. Collection defaults are development-only. Before non-local use, provide long random `TASKBOX_JWT_SECRET` and `TASKBOX_WEBHOOK_SECRET` values and update the Postman session value of `webhook_secret`.
+
+  ## How this collection supports the prerequisite and Labs 01-11
+
+  1. **Postman foundations with TaskBox** (`course/labs/00-postman-prerequisite/`): learn the local workspace/collection structure, requests and live responses, scoped variables, environment overrides, secret hygiene, authorization inheritance, scripts/tests, examples, runner order, and documentation using this collection. Complete it before Lab 01.
+
+  2. **HTTP and API design** (`course/labs/01-http-api-design/`): inspect request methods, resource paths, status assertions, examples, content types, and RFC 9457-style problem responses. The lab's small contract/server is standalone; this collection demonstrates the same design concerns in the integrated TaskBox API.
+
+  3. **FastAPI foundations** (`course/labs/02-fastapi-basics/`): compare typed validation and generated OpenAPI with the request bodies and 422 expectations here. The greetings lab service is separate from TaskBox.
+
+  4. **Resource-oriented CRUD** (`course/labs/03-crud/`): use Projects and Tasks to exercise predictable create, read, update, delete, PATCH, 201/200/204/404 behavior, and resource lifecycles. The notes lab service remains a separate teaching service.
+
+  5. **API testing and clients** (`course/labs/04-testing-client-usage/`): use saved examples and response scripts as executable HTTP checks alongside the lab's pytest and Python-client exercises. Collection-level checks validate response time, JSON content type, and TaskBox problem shape; request checks validate statuses and response data.
+
+  6. **Authentication, authorization, and API security** (`course/labs/05-auth-security/`): Auth issues and captures JWTs; Members and member-specific request variants demonstrate owner, editor, and viewer boundaries. The focused port-8005 lab service is separate.
+
+  7. **SQLite-first persistence** (`course/labs/06-persistence/`): run project/task CRUD across restarts to observe durable TaskBox state, repository behavior, conflicts, and transaction-visible results. The focused port-8006 persistence service is separate.
+
+  8. **Operations and PostgreSQL transition** (`course/labs/07-operations/`): Health maps directly to liveness/readiness outcomes. Use the root service for collection calls; the lab's Compose/PostgreSQL transition and port-8007 service are separate deployment exercises.
+
+  9. **GraphQL and gRPC survey** (`course/labs/08-graphql-grpc/`): use TaskBox REST as the public compatibility baseline for comparison. GraphQL and gRPC run as standalone services from `course/examples/graphql/` and `course/examples/grpc/`; they are not represented by these HTTP requests.
+
+  10. **WebSockets and server-sent events** (`course/labs/09-realtime/`): compare TaskBox HTTP task operations with the lab's event delivery model. The WebSocket `/ws` and SSE `/events` service runs separately on port 8009 and is not exercised by this HTTP collection.
+
+  11. **Signed webhooks and event processing** (`course/labs/10-webhooks-events/`): Webhooks computes the HMAC over the substituted raw body, sends an event ID, and checks idempotent import behavior. Use the lab to study timestamped signatures and retry-safe processing in isolation.
+
+  12. **TaskBox capstone and deployment** (`course/labs/11-capstone-deployment/`): run the end-to-end workflow below as a smoke/contract suite covering JWTs, roles, pagination, persistence, signed imports, probes, and cleanup. Pair it with the required architecture diagram, threat model, migration command, rollback plan, failure/recovery note, and deployment rehearsal.
+
+
+  ## Recommended Postman learning and run sequence
+
+  Start with required Prerequisite 00, then read `README.md`, `course/course-map.yml`, and the current lab README before using the corresponding folders. First send Health check, Liveness check, and Readiness check. In Auth, register the owner, get the owner token, verify the current owner, then register the member, get the member token, and verify the current member. Next create and list a project; its response script captures `project_id`. Add/list/update membership and run the member authorization examples. Then create/get/list/update tasks and run the editor/viewer-oriented examples; task creation captures `task_id`. Finally send Import tasks with a fresh business event ID, verify the resulting task/list state, and run delete/cleanup requests only after the assertions you need.
+
+  Run requests in their folder order because response scripts save `owner_id`, `member_id`, JWTs, `project_id`, `task_id`, and cursors as collection variables. Protected folders inherit the owner Bearer token; member authorization examples explicitly use `member_access_token`.
+
+  ## Folder/request-to-outcome map
+
+  - **Health**: Health check, Liveness check, Readiness check -> operational probes, dependency readiness, and smoke-test entry points (Modules 7 and 11).
+
+  - **Auth**: Register owner/member, Get owner/member token, Get current owner/member -> validated inputs, JWT lifecycle, identity, and authentication failures (Modules 2, 5, and 11).
+
+  - **Projects**: Create/Get/List/Update/Delete project -> resource-oriented CRUD, partial updates, cursor pagination, persistence, and owner permissions (Modules 1, 3, 6, and 11).
+
+  - **Members**: Add/List/Update role/Remove member plus Member can list members -> project role policy, forbidden/conflict/not-found behavior, and authorization testing (Modules 4, 5, and 11).
+
+  - **Tasks**: Create/Get/List/Update/Delete task plus member read/editor-create variants -> CRUD lifecycle, validation/filtering/pagination, persisted state, and role enforcement (Modules 3, 4, 5, 6, and 11).
+
+  - **Webhooks**: Import tasks -> raw-body HMAC signing, event identity, idempotency, authorization, and retry-safe integration (Modules 10 and 11).
+
+
+  ## Capstone workflow and behavior notes
+
+  Health probes -> register owner/member -> issue owner/member tokens -> inspect `/me` -> create/list/update a project -> manage membership -> create/list/update tasks -> signed webhook import -> verify state -> cleanup. Owners can read/write projects, memberships, and tasks. Editors can read and write tasks but cannot change project metadata or memberships. Viewers can read project data and tasks but cannot write tasks. Webhook import accepts an optional JWT; without one, the verified body must contain `actor_id`.
+
+  Project, membership, and task lists return `{items, next_cursor}`. `limit` is 1-100 (default 50); keep filters unchanged while following an opaque cursor. Task status is `todo`, `in_progress`, `done`, or `archived`; priority is 0-4. Domain failures use `application/problem+json` with stable codes including `authentication_required`, `forbidden`, `not_found`, `conflict`, `duplicate_webhook`, `validation_error`, and `invalid_cursor`. FastAPI's missing-Bearer path may use its default JSON error shape.
+
+  ## Validation and completion expectations
+
+  Treat a run as evidence, not a substitute for the course checks. Review every status/body assertion and investigate failures; verify JSON/problem content types, stable problem fields, role-denial cases, cursor behavior, webhook replay conflict, and sub-two-second local responses. Course completion requires Prerequisite 00, Labs 01-11, 43 hours, and the checks declared in `course/course-map.yml`: `pytest`, `ruff`, `openapi-contract`, `astro-check`, and `astro-build`. Repository commands are documented in `README.md`: `uv run pytest`, `uv run ruff check .`, `uv run python scripts/validate_course_map.py`, `uv run python scripts/check_openapi_contract.py`, then `npm ci`, `npm run check`, and `npm run build` from `site/`.
+
+  ## Repository paths
+
+  - Course map: `course/course-map.yml`
+
+  - Lab guides: `course/labs/00-postman-prerequisite/README.md`, then `course/labs/01-http-api-design/README.md` through `course/labs/11-capstone-deployment/README.md`
+
+  - TaskBox implementation: `src/taskbox/`
+
+  - OpenAPI contract checks: `scripts/check_openapi_contract.py`
+
+  - Course-map validation: `scripts/validate_course_map.py`
+
+  - Root startup and verification guide: `README.md`
+variables:
+  base_url: http://127.0.0.1:8000
+  owner_email: ali.shaikh@example.com
+  owner_password: correct-horse-battery-staple
+  owner_display_name: Ali Mustufa
+  owner_id: ""
+  owner_access_token: ""
+  member_email: member.postman@example.com
+  member_password: correct-horse-battery-staple
+  member_display_name: Postman Member
+  member_id: ""
+  member_access_token: ""
+  project_id: ""
+  task_id: ""
+  cursor: ""
+  webhook_secret: dev-webhook-secret
+  webhook_event_id: evt-postman-import-001
+scripts:
+  - type: http:afterResponse
+    code: |-
+      pm.test('Response time is under 2 seconds', function () {
+        pm.expect(pm.response.responseTime).to.be.below(2000);
+      });
+      const status = pm.response.code;
+      if (status !== 204) {
+        pm.test('Response has a JSON content type', function () {
+          pm.expect(pm.response.headers.get('Content-Type') || '').to.match(/application\/(json|problem\+json)/i);
+        });
+      }
+      if (status >= 400 && (pm.response.headers.get('Content-Type') || '').includes('application/problem+json')) {
+        pm.test('Problem response follows the TaskBox problem shape', function () {
+          const body = pm.response.json();
+          pm.expect(body).to.include.all.keys('type', 'title', 'status', 'detail', 'instance', 'code');
+          pm.expect(body.status).to.eql(status);
+          pm.expect(body.type).to.match(/^https:\/\/taskbox\.dev\/problems\//);
+        });
+      }
+    language: text/javascript

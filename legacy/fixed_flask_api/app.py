@@ -181,6 +181,8 @@ def create_app(test_config: dict[str, object] | None = None) -> Flask:
     def replace_joke(joke_id: int) -> Response:
         try:
             values = validate_joke_payload(_json_body())
+        except MalformedJSONError as exc:
+            return _malformed_json_problem(exc)
         except ValidationError as exc:
             return _validation_problem(exc)
         joke = app.extensions["joke_store"].replace(joke_id, **values)

@@ -1,0 +1,30 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/api/v1/projects/:project_id/tasks'
+order: 6000
+description: |-
+  Authorization example: after Update member role promotes the secondary user to editor, this request succeeds with 201. If the user remains viewer it correctly returns 403.
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{member_access_token}}'
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Editor-created verification task",
+      "priority": 1
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Editor can create a task', function () { pm.response.to.have.status(201); });
+      pm.expect(pm.response.json().created_by).to.eql(pm.collectionVariables.get('member_id'));

@@ -32,7 +32,7 @@ The release sequence should be explicit:
 build -> backup/check -> migrate -> start -> readiness -> smoke test -> traffic
 ```
 
-Run reviewed Alembic migrations before application traffic. Prefer additive, backward-compatible schema changes when old and new instances overlap. Define the rollback condition, who makes the decision, and whether rollback means reverting code, restoring data, or applying a compensating migration. A backup is useful only if restoration has been rehearsed.
+Run reviewed, versioned schema changes before application traffic. Prefer additive, backward-compatible changes when old and new instances overlap. Define the rollback condition, who makes the decision, and whether rollback means reverting code, restoring data, or applying a compensating schema change. A backup is useful only if restoration has been rehearsed.
 
 ## Verification checklist
 

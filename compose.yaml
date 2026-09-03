@@ -2,9 +2,10 @@ services:
   app:
     build: .
     environment:
+      TASKBOX_ENV: production
       TASKBOX_DATABASE_URL: sqlite:////data/taskbox.db
-      TASKBOX_JWT_SECRET: ${TASKBOX_JWT_SECRET:-change-me-in-development}
-      TASKBOX_WEBHOOK_SECRET: ${TASKBOX_WEBHOOK_SECRET:-change-me-in-development}
+      TASKBOX_JWT_SECRET: "${TASKBOX_JWT_SECRET:?Set TASKBOX_JWT_SECRET to a non-default secret}"
+      TASKBOX_WEBHOOK_SECRET: "${TASKBOX_WEBHOOK_SECRET:?Set TASKBOX_WEBHOOK_SECRET to a non-default secret}"
     ports:
       - "8000:8000"
     volumes:

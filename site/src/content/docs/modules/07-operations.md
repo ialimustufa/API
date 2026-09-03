@@ -41,7 +41,7 @@ Use JSON logs in deployment so a collector can filter by request ID. Redact Auth
 
 Runtime configuration supplies the database URL, JWT secret, and other secrets. Validate required values at startup and keep safe defaults limited to local development. A graceful shutdown stops accepting new work, lets in-flight requests finish within a deadline, closes database pools, and then exits. Make timeout behavior explicit: work that cannot finish should be retried safely by its caller or queue.
 
-The provided Compose file demonstrates a dependency-aware startup. PostgreSQL has a healthcheck; the API waits for the database to become healthy before starting. This avoids a race, but readiness must still test the live dependency because a healthy database can fail later. Use migrations as a separate, observable release step rather than hiding schema creation in application startup.
+The provided Compose file demonstrates a dependency-aware startup. PostgreSQL has a healthcheck; the API waits for the database to become healthy before starting. This avoids a race, but readiness must still test the live dependency because a healthy database can fail later. Use schema changes as a separate, observable release step rather than hiding schema creation in application startup. The SQLite reference app bootstraps a local development file from reference DDL; it has no versioned migration CLI or migration history.
 
 ## Practice and verification
 

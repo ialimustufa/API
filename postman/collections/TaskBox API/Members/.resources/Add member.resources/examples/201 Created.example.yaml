@@ -1,0 +1,22 @@
+$kind: http-example
+name: 201 Created
+request:
+  url: '{{base_url}}/api/v1/projects/{{project_id}}/members'
+  method: POST
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    - key: Content-Type
+      value: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "project_id": "c5d95506-ab1d-48d7-83b5-288e89d55947",
+        "user_id": "112e4c0a-8889-437e-9b5d-e6cbf8d1a839",
+        "role": "viewer",
+        "created_at": "2030-01-01T12:10:00Z",
+        "updated_at": "2030-01-01T12:10:00Z"
+      }
+order: 1000

@@ -1,0 +1,16 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/livez'
+order: 2000
+description: |-
+  Public liveness alias implemented by the app but excluded from OpenAPI. Returns 200 with `status: ok` when the process can handle HTTP.
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Liveness returns 200 and ok', function () {
+        pm.response.to.have.status(200);
+        pm.expect(pm.response.json()).to.eql({ status: 'ok' });
+      });

@@ -48,6 +48,16 @@ uv run pytest
 
 Then register a user and exercise the route examples in the TaskBox chapters. Restart the server and confirm SQLite data remains. For clean state, remove only a disposable lesson database you intentionally created.
 
+## Begin the course
+
+After setup, complete [Prerequisite 00: Postman foundations](../modules/00-postman-prerequisite/) and its practical lab at `course/labs/00-postman-prerequisite/README.md`. It is a required three-hour part of the course and must appear before Lab 01. Use the local file-backed `TaskBox API` collection under `postman/collections/TaskBox API/`; do not create a duplicate collection.
+
+## Reference material
+
+Work through the prerequisite and numbered course modules in order. When you need implementation details for the course application, start with the [TaskBox API domain and routes](../taskbox/domain-and-routes/), then use the neighboring reference pages for authentication, project roles, cursor pagination, and signed webhooks.
+
+For storage guidance, begin with [SQLite-first persistence](../persistence/sqlite-first/). Use [PostgreSQL with Docker](../persistence/postgresql/) when you reach the database transition lab.
+
 ## Documentation site
 
 The site is in `site/`. Keep the committed npm lockfile in sync:
@@ -58,7 +68,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:4321/`. Local links use root `/`. The production GitHub Pages build is beneath `/API/`; a page linked as `/setup/` locally is reached as `/API/setup/` when deployed. Do not hard-code `/API/` into lesson links, because that breaks local preview.
+Open `http://localhost:4321/`. Use relative links for internal documentation routes. For example, `./setup/` from the home page resolves to `/setup/` locally and `/API/setup/` in production. Avoid both root-absolute `/setup/` links and hard-coded `/API/setup/` links so local preview and GitHub Pages use the same source.
 
 Build before sharing documentation changes:
 

@@ -3,6 +3,8 @@
 Make failure visible and startup repeatable. Add `/healthz` (process health),
 `/readyz` (dependency readiness), structured request IDs, and graceful shutdown.
 Then run the provided Compose file with the API and PostgreSQL services.
+This lab intentionally ships no migration command or migration history; keep
+reviewed schema changes as a separate deployment concern.
 
 ```bash
 uv run uvicorn solution.app:app --port 8007

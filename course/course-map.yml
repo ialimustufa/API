@@ -1,9 +1,17 @@
 title: API Engineering with TaskBox
 version: 1
 baseline: python-3.13
-duration_hours: 40
+duration_hours: 43
 format: self-paced
 modules:
+  - id: postman-prerequisite
+    title: Postman foundations with TaskBox
+    hours: 3
+    prerequisite: true
+    labs: [00-postman-prerequisite]
+    outcomes:
+      - Use the local TaskBox collection, variables, authorization, scripts, examples, and documentation safely
+      - Run and troubleshoot the dependency-ordered TaskBox workflow before beginning Lab 01
   - id: http-api-design
     title: HTTP and API design
     hours: 4
@@ -82,8 +90,9 @@ modules:
       - Integrate the course capabilities into one production-minded API
       - Document migration, rollback, threat-model, and smoke-test plans
 course_completion:
-  required_hours: 40
+  required_hours: 43
   required_labs:
+    - 00-postman-prerequisite
     - 01-http-api-design
     - 02-fastapi-basics
     - 03-crud

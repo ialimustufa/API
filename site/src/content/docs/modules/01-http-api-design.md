@@ -3,6 +3,8 @@ title: "Module 1: HTTP and API design"
 description: Turn product behavior into a predictable HTTP contract.
 ---
 
+Complete [Prerequisite 00: Postman foundations](../00-postman-prerequisite/) before beginning this module.
+
 An API is a contract between independently changing programs. Good API design starts before
 framework code: identify the resources, decide which state transitions are allowed, and describe
 the success and failure responses a client can depend on.
@@ -56,7 +58,7 @@ is for humans:
 
 ```json
 {
-  "type": "https://taskbox.dev/problems/forbidden",
+  "type": "http://127.0.0.1:8000/problems/forbidden",
   "title": "Forbidden",
   "status": 403,
   "detail": "your project role cannot perform this action",

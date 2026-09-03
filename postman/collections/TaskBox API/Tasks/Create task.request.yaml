@@ -1,0 +1,38 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/api/v1/projects/:project_id/tasks'
+order: 2000
+description: |-
+  Creates a task as project owner. Owners and editors may write; viewers receive 403. Title is required (1-240 chars), description max 10000, priority 0-4, and due_at is ISO 8601. Assignee must reference an existing user.
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Verify the TaskBox API",
+      "description": "Exercise collection variables, authorization, pagination, and response contracts.",
+      "status": "todo",
+      "priority": 2,
+      "assignee_id": "{{member_id}}",
+      "due_at": "2030-01-15T17:00:00Z"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Task creation returns 201', function () { pm.response.to.have.status(201); });
+      const body = pm.response.json();
+      pm.test('Task response has the documented fields', function () {
+        pm.expect(body).to.include.all.keys('id', 'project_id', 'created_by', 'assignee_id', 'title', 'description', 'status', 'priority', 'due_at', 'created_at', 'updated_at');
+        pm.expect(body.project_id).to.eql(pm.collectionVariables.get('project_id'));
+        pm.expect(body.created_by).to.eql(pm.collectionVariables.get('owner_id'));
+        pm.expect(body.status).to.eql('todo');
+        pm.expect(body.priority).to.eql(2);
+      });
+      pm.collectionVariables.set('task_id', body.id);
+examples: './.resources/Create task.resources/examples'

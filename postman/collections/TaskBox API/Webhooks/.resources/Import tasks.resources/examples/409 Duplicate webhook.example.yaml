@@ -1,0 +1,23 @@
+$kind: http-example
+name: 409 Duplicate webhook
+request:
+  url: '{{base_url}}/api/v1/webhooks/tasks/import'
+  method: POST
+response:
+  statusCode: 409
+  statusText: Conflict
+  headers:
+    - key: Content-Type
+      value: application/problem+json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "https://taskbox.dev/problems/duplicate_webhook",
+        "title": "Duplicate Webhook",
+        "status": 409,
+        "detail": "webhook event has already been received",
+        "instance": "http://127.0.0.1:8000/api/v1/webhooks/tasks/import",
+        "code": "duplicate_webhook"
+      }
+order: 2000

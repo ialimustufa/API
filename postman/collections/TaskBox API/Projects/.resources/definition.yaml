@@ -1,0 +1,12 @@
+$kind: collection
+name: Projects
+description: |-
+  Project CRUD and cursor listing. Creating a project atomically creates the caller's owner membership. Any member may read; only the owner may patch or delete. PATCH is partial: omitted description is preserved, while explicit `null` clears it. Lists accept `limit` 1-100 and an opaque cursor.
+
+  Course mapping: use this folder for HTTP/resource design (`course/labs/01-http-api-design/README.md`), lifecycle and status semantics (`course/labs/03-crud/README.md`), durable state (`course/labs/06-persistence/README.md`), and the integrated capstone (`course/labs/11-capstone-deployment/README.md`). Run Create project first so its script captures `project_id`.
+order: 3000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{owner_access_token}}'

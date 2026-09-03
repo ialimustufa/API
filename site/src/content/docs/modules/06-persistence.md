@@ -37,7 +37,7 @@ def create_task(session: Session, data: TaskCreate) -> Task:
     return to_domain(row)
 ```
 
-Do not treat `create_all` as a migration system. It cannot describe renames, data backfills, or rollback intent. In production, generate and review Alembic revisions, run them as a release step before traffic, and record the schema version. Design migrations to be compatible with the code versions that may overlap during rollout.
+Do not treat `create_all` as a migration system. It cannot describe renames, data backfills, or rollback intent. In production, maintain and review versioned schema changes, run them as a release step before traffic, and record the schema version. This repository intentionally ships no migration CLI or migration history. Design schema changes to be compatible with the code versions that may overlap during rollout.
 
 ## SQLite first, PostgreSQL next
 

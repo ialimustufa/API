@@ -1,0 +1,16 @@
+$kind: http-example
+name: 202 Accepted
+request:
+  url: '{{base_url}}/api/v1/webhooks/tasks/import'
+  method: POST
+response:
+  statusCode: 202
+  statusText: Accepted
+  headers:
+    - key: Content-Type
+      value: application/json
+  body:
+    type: json
+    content: |-
+      {"event_id":"evt-postman-import-001","imported":1,"duplicate":false}
+order: 1000

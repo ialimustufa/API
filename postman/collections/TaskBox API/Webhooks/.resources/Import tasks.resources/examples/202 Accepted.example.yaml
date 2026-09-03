@@ -12,5 +12,5 @@ response:
   body:
     type: json
     content: |-
-      {"event_id":"evt-postman-import-001","imported":1,"duplicate":false}
+      {"event_id":"evt-postman-import-001","imported":1}
 order: 1000

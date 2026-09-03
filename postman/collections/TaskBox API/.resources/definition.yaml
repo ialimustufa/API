@@ -118,7 +118,8 @@ scripts:
           const body = pm.response.json();
           pm.expect(body).to.include.all.keys('type', 'title', 'status', 'detail', 'instance', 'code');
           pm.expect(body.status).to.eql(status);
-          pm.expect(body.type).to.match(/^https:\/\/taskbox\.dev\/problems\//);
+          pm.expect(body.type).to.match(/\/problems\//);
+          pm.expect(body.type.endsWith('/problems/' + body.code)).to.be.true;
         });
       }
     language: text/javascript

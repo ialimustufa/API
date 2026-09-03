@@ -2,7 +2,7 @@
 
 This repository is a beginner-to-production course for designing, building, testing, and operating APIs.
 
-The new course uses Python, FastAPI, SQLite, and a TaskBox capstone. It includes runnable labs, generated OpenAPI contracts, authentication, webhooks, observability, and deployment exercises. Historical material is preserved under [`legacy/`](legacy/).
+The new course uses Python, FastAPI, SQLite, and a TaskBox capstone. It includes runnable labs, generated OpenAPI contracts, authentication, webhooks, observability, and deployment exercises.
 
 ## Start here
 
@@ -44,7 +44,10 @@ Set `TASKBOX_JWT_SECRET` and `TASKBOX_WEBHOOK_SECRET` to long random values in
 `.env` before exposing the API. The PostgreSQL transition is a separate required
 exercise in [`course/labs/07-operations`](course/labs/07-operations/).
 
-
 ## License
 
 Authored course and application code is MIT licensed. Historical third-party material retains its original provenance; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
+## Legacy
+
+The original course materials are preserved under [`legacy/`](legacy/).

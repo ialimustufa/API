@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Export the TaskBox application's generated OpenAPI document.
 
-Usage: python scripts/export_openapi.py [output.json]
+Usage: python scripts/export_openapi.py OUTPUT.json
 The app can expose either ``taskbox.api:app`` or ``taskbox.main:app``.
 """
 
@@ -26,7 +26,10 @@ def find_app():
 
 
 def main() -> int:
-    destination = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("contracts/taskbox.openapi.json")
+    if len(sys.argv) != 2:
+        print("usage: python scripts/export_openapi.py OUTPUT.json", file=sys.stderr)
+        return 2
+    destination = Path(sys.argv[1])
     document = find_app().openapi()
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(document, indent=2, sort_keys=False) + "\n", encoding="utf-8")

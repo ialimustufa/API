@@ -1,17 +1,17 @@
 $kind: http-request
+name: Health check
 method: GET
-url: '{{base_url}}/healthz'
+url: "{{base_url}}/healthz"
 order: 1000
-description: |-
-  Public health endpoint included in OpenAPI. Returns 200 with `status: ok` when the application process is serving requests. It does not query the database; use readiness for that.
+description: "Public health endpoint included in OpenAPI. Returns 200 with `status: ok` when the application process is serving requests. It does not query the database; use readiness for that."
 auth:
   type: noauth
 scripts:
   - type: afterResponse
-    language: text/javascript
     code: |-
       pm.test('Health check returns 200 and ok', function () {
         pm.response.to.have.status(200);
         pm.expect(pm.response.json()).to.eql({ status: 'ok' });
       });
-examples: './.resources/Health check.resources/examples'
+    language: text/javascript
+examples: ./.resources/Health check.resources/examples

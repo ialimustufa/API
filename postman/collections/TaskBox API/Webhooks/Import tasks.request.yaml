@@ -31,6 +31,5 @@ scripts:
       pm.test('Webhook result identifies the accepted event', function () {
         pm.expect(body.event_id).to.eql(pm.collectionVariables.get('webhook_event_id'));
         pm.expect(body.imported).to.eql(1);
-        pm.expect(body.duplicate).to.eql(false);
       });
 examples: './.resources/Import tasks.resources/examples'

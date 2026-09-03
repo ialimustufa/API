@@ -50,7 +50,7 @@ Task lists support `status` (`todo`, `in_progress`, `done`, `archived`) and `ass
 `limit` is validated by FastAPI: values below 1 or above 100 produce `422`. A malformed or undecodable cursor produces `400`:
 
 ```json
-{"type":"https://taskbox.dev/problems/invalid_cursor","title":"Invalid Cursor","status":400,"detail":"cursor is invalid","instance":"...","code":"invalid_cursor"}
+{"type":"http://127.0.0.1:8000/problems/invalid_cursor","title":"Invalid Cursor","status":400,"detail":"cursor is invalid","instance":"...","code":"invalid_cursor"}
 ```
 
 Handle this as a restartable client error: discard the cursor and fetch the first page, or ask the user to refresh.

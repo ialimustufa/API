@@ -30,17 +30,21 @@ curl -i -X POST http://127.0.0.1:8000/api/v1/webhooks/tasks/import \
 The successful response is `202`:
 
 ```json
-{"event_id":"vendor-2025-0001","imported":1,"duplicate":false}
+{"event_id":"vendor-2025-0001","imported":1}
 ```
 
 The optional Bearer token matters. If no token is supplied, the service can use `actor_id` from the verified body; without either actor, it returns `401`. The actor must be an owner or editor of the target project. A viewer is authenticated but receives `403`.
+
+### Capstone threat-model note
+
+TaskBox uses one shared development secret, so a valid signature proves only that a sender knows that secret; it does not establish a distinct sender identity. In particular, an unauthenticated but correctly signed payload can name any project owner or editor in `actor_id`. This is acceptable only for the controlled lab. A production receiver should either require Bearer authentication for the acting user or map a per-sender secret/key identity to an allowed actor or project scope. Do not treat `actor_id` from the body as independent authorization.
 
 ## Verification and idempotency
 
 TaskBox uses constant-time HMAC comparison and strips only the optional `sha256=` prefix. A wrong secret, altered body, or malformed signature returns `401` with `code: "invalid_webhook_signature"`:
 
 ```json
-{"type":"https://taskbox.dev/problems/invalid_webhook_signature","title":"Invalid Webhook Signature","status":401,"detail":"webhook signature is invalid","instance":"...","code":"invalid_webhook_signature"}
+{"type":"http://127.0.0.1:8000/problems/invalid_webhook_signature","title":"Invalid Webhook Signature","status":401,"detail":"webhook signature is invalid","instance":"...","code":"invalid_webhook_signature"}
 ```
 
 Only after verification does the service decode JSON. Invalid JSON or a missing project/tasks list is `422` with `code: "validation_error"`; a nonexistent project is `404`. Task field validation (for example, priority outside 0–4) also fails as a domain validation error.
@@ -48,7 +52,7 @@ Only after verification does the service decode JSON. Invalid JSON or a missing 
 After authorization, the service creates a `WebhookReceipt` containing the event ID, signature, SHA-256 payload hash, and processing timestamps. The event ID is unique. Replaying the same event—even with a different payload—returns `409` and `code: "duplicate_webhook"`:
 
 ```json
-{"type":"https://taskbox.dev/problems/duplicate_webhook","title":"Duplicate Webhook","status":409,"detail":"webhook event has already been received","instance":"...","code":"duplicate_webhook"}
+{"type":"http://127.0.0.1:8000/problems/duplicate_webhook","title":"Duplicate Webhook","status":409,"detail":"webhook event has already been received","instance":"...","code":"duplicate_webhook"}
 ```
 
 The receipt and imported tasks are committed in one unit of work. If task validation fails midway, the transaction must roll back so a later corrected retry is not incorrectly blocked by a receipt. The receipt status model (`received`, `processed`, `failed`) provides an audit trail for production retry tooling.

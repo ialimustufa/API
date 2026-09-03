@@ -13,5 +13,6 @@ curl http://127.0.0.1:8006/api/v1/tasks
 
 The starter leaves repository methods incomplete. Notice the transaction
 boundary: commit writes, rollback is automatic on an exception, and reads do
-not mutate state. In a production service, replace `create_all` with Alembic
-migrations.
+not mutate state. In a production service, use a reviewed, version-controlled
+schema-change process rather than `create_all`; this repository intentionally
+ships no migration CLI or migration history.

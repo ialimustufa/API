@@ -1,9 +1,8 @@
--- TaskBox initial schema.
+-- TaskBox reference SQLite bootstrap schema.
 --
--- The types intentionally use portable SQL (TEXT for UUIDs and timestamps),
--- so this migration can be exercised with SQLite in the early labs and run by
--- PostgreSQL in the production lab.  Application code stores ISO-8601 UTC
--- timestamps and UUID strings in both databases.
+-- This is deliberately reference DDL, not a versioned migration history. The
+-- local SQLite adapter applies it only to bootstrap a new development database.
+-- Production deployments must use reviewed, forward-only migrations.
 
 CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
@@ -59,8 +58,8 @@ CREATE TABLE IF NOT EXISTS webhook_receipts (
     metadata TEXT NOT NULL DEFAULT '{}'
 );
 
-CREATE INDEX IF NOT EXISTS idx_projects_owner ON projects(owner_id, id);
-CREATE INDEX IF NOT EXISTS idx_memberships_user ON memberships(user_id, project_id);
+CREATE INDEX IF NOT EXISTS idx_projects_owner ON projects(owner_id, created_at, id);
+CREATE INDEX IF NOT EXISTS idx_memberships_user ON memberships(user_id, created_at, project_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_project_cursor ON tasks(project_id, created_at, id);
 CREATE INDEX IF NOT EXISTS idx_tasks_project_status ON tasks(project_id, status, created_at, id);
 CREATE INDEX IF NOT EXISTS idx_webhook_receipts_status ON webhook_receipts(status, received_at);

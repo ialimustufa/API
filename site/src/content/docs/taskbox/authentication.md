@@ -17,6 +17,8 @@ curl -i -X POST http://127.0.0.1:8000/api/v1/auth/register \
 
 Email is lowercased by validation. Passwords shorter than eight characters fail with `422`; a repeated email is `409` with `code: "conflict"`. The response is `201` and contains a UUID, status (`active`), and timestamps, but no password hash.
 
+The explicit `409` is intentional for the course: it makes the uniqueness constraint observable, but it also reveals whether an email is registered. A public self-service registration flow should avoid treating that response as private-account protection; use rate limits and email verification, or return an indistinguishable acknowledgement when enumeration resistance is required.
+
 The SQLite adapter stores the Argon2 hash. This is intentionally a port-and-adapter boundary: replacing SQLite with PostgreSQL does not require changing the HTTP route or domain model. In a real service, add rate limits, email verification, breached-password checks, and an account-recovery flow around this minimal lesson implementation.
 
 ## Issue a token
@@ -35,6 +37,8 @@ The response shape is:
 {"access_token":"eyJ...","token_type":"bearer","expires_in":3600}
 ```
 
+Unknown email, disabled account, and wrong password all receive the same `401` problem detail. TaskBox performs a password verification against a dummy Argon2 hash when the email is unknown, so that lookup branch does not skip the expensive verification work. This reduces a timing signal; it does not replace rate limiting and other account-abuse controls.
+
 The issuer signs an `HS256` token containing `sub` (the user UUID), `iat`, `exp`, and `iss: "taskbox"`. The default lifetime is 3,600 seconds and can be changed with `TASKBOX_JWT_EXPIRES`. Do not put secrets, passwords, or mutable authorization decisions in claims. TaskBox checks membership in the database for each project operation, so role changes take effect without waiting for a token refresh.
 
 ## Send and validate it
@@ -51,14 +55,14 @@ curl -sS http://127.0.0.1:8000/api/v1/projects \
 No credential, a forged token, a token signed with the wrong algorithm, an expired token, or a token for a disabled user produces `401` with `WWW-Authenticate: Bearer`. An example problem document is:
 
 ```json
-{"type":"https://taskbox.dev/problems/authentication_required","title":"Authentication Required","status":401,"detail":"invalid or expired token","instance":"...","code":"authentication_required"}
+{"type":"http://127.0.0.1:8000/problems/authentication_required","title":"Authentication Required","status":401,"detail":"invalid or expired token","instance":"...","code":"authentication_required"}
 ```
 
 Validation errors are different: a malformed request body is `422` and includes `errors` entries with locations such as `body.password`.
 
 ## Configuration and deployment
 
-Set a long, random `TASKBOX_JWT_SECRET` in the deployment environment. The built-in `dev-only-change-me` fallback is for local learning only. Keep configuration out of source control, rotate secrets deliberately, use HTTPS, and avoid logging full Authorization headers. If you need immediate revocation, add a token version or denylist; short expiry alone does not revoke an already-issued token.
+Set long, random `TASKBOX_JWT_SECRET` and `TASKBOX_WEBHOOK_SECRET` values in the deployment environment. `TASKBOX_ENV` defaults to `development`, which permits the committed placeholder values only for disposable local instruction. In `production`, `staging`, or any other non-local value, TaskBox rejects empty values and known development placeholders at startup. Keep configuration out of source control, rotate secrets deliberately, use HTTPS, and avoid logging full Authorization headers. If you need immediate revocation, add a token version or denylist; short expiry alone does not revoke an already-issued token.
 
 ## Exercise
 

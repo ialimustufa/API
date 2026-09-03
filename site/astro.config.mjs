@@ -26,6 +26,7 @@ export default defineConfig({
         {
           label: 'Course modules',
           items: [
+            { label: 'Prerequisite 00 · Postman foundations', slug: 'modules/00-postman-prerequisite' },
             { label: '01 · HTTP and API design', slug: 'modules/01-http-api-design' },
             { label: '02 · FastAPI foundations', slug: 'modules/02-fastapi-foundations' },
             { label: '03 · Resource CRUD', slug: 'modules/03-resource-crud' },

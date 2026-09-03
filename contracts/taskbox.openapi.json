@@ -7,6 +7,7 @@
   },
   "servers": [{"url": "http://localhost:8000", "description": "Local development"}],
   "tags": [
+    {"name": "Health"},
     {"name": "Auth"},
     {"name": "Projects"},
     {"name": "Tasks"},
@@ -14,7 +15,7 @@
   ],
   "paths": {
     "/healthz": {
-      "get": {"operationId": "healthCheck", "tags": ["Auth"], "responses": {"200": {"description": "Service is healthy", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Health"}}}}}}
+      "get": {"operationId": "healthCheck", "tags": ["Health"], "responses": {"200": {"description": "Service is healthy", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Health"}}}}}}
     },
     "/api/v1/auth/register": {
       "post": {
@@ -200,8 +201,8 @@
       "Task": {"type": "object", "required": ["id", "project_id", "created_by", "title", "status", "priority", "created_at", "updated_at"], "properties": {"id": {"type": "string", "format": "uuid"}, "project_id": {"type": "string", "format": "uuid"}, "created_by": {"type": "string", "format": "uuid"}, "assignee_id": {"type": ["string", "null"], "format": "uuid"}, "title": {"type": "string", "maxLength": 240}, "description": {"type": ["string", "null"], "maxLength": 10000}, "status": {"$ref": "#/components/schemas/TaskStatus"}, "priority": {"type": "integer", "minimum": 0, "maximum": 4}, "due_at": {"type": ["string", "null"], "format": "date-time"}, "created_at": {"type": "string", "format": "date-time"}, "updated_at": {"type": "string", "format": "date-time"}}},
       "TaskCreate": {"type": "object", "required": ["title"], "properties": {"title": {"type": "string", "minLength": 1, "maxLength": 240}, "description": {"type": ["string", "null"], "maxLength": 10000}, "status": {"$ref": "#/components/schemas/TaskStatus"}, "priority": {"type": "integer", "minimum": 0, "maximum": 4}, "assignee_id": {"type": ["string", "null"], "format": "uuid"}, "due_at": {"type": ["string", "null"], "format": "date-time"}}},
       "TaskUpdate": {"type": "object", "minProperties": 1, "properties": {"title": {"type": "string", "minLength": 1, "maxLength": 240}, "description": {"type": ["string", "null"], "maxLength": 10000}, "status": {"$ref": "#/components/schemas/TaskStatus"}, "priority": {"type": "integer", "minimum": 0, "maximum": 4}, "assignee_id": {"type": ["string", "null"], "format": "uuid"}, "due_at": {"type": ["string", "null"], "format": "date-time"}}},
-      "WebhookImportRequest": {"type": "object", "required": ["project_id", "tasks"], "properties": {"project_id": {"type": "string", "format": "uuid"}, "tasks": {"type": "array", "minItems": 1, "items": {"$ref": "#/components/schemas/TaskCreate"}}}},
-      "WebhookImportResponse": {"type": "object", "required": ["event_id", "imported", "duplicate"], "properties": {"event_id": {"type": "string"}, "imported": {"type": "integer", "minimum": 0}, "duplicate": {"type": "boolean"}}},
+      "WebhookImportRequest": {"type": "object", "required": ["project_id", "tasks"], "properties": {"project_id": {"type": "string", "format": "uuid"}, "actor_id": {"type": ["string", "null"], "format": "uuid", "description": "Optional actor when no Bearer token is supplied; see the threat-model guidance."}, "tasks": {"type": "array", "minItems": 1, "items": {"$ref": "#/components/schemas/TaskCreate"}}}},
+      "WebhookImportResponse": {"type": "object", "required": ["event_id", "imported"], "properties": {"event_id": {"type": "string"}, "imported": {"type": "integer", "minimum": 0}}},
       "PageInfo": {"type": "object", "required": ["next_cursor"], "properties": {"next_cursor": {"type": ["string", "null"]}}},
       "ProjectPage": {"type": "object", "required": ["items", "next_cursor"], "properties": {"items": {"type": "array", "items": {"$ref": "#/components/schemas/Project"}}, "next_cursor": {"type": ["string", "null"]}}},
       "MembershipPage": {"type": "object", "required": ["items", "next_cursor"], "properties": {"items": {"type": "array", "items": {"$ref": "#/components/schemas/Membership"}}, "next_cursor": {"type": ["string", "null"]}}},

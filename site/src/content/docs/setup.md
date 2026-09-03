@@ -48,9 +48,13 @@ uv run pytest
 
 Then register a user and exercise the route examples in the TaskBox chapters. Restart the server and confirm SQLite data remains. For clean state, remove only a disposable lesson database you intentionally created.
 
+## Begin the course
+
+After setup, complete [Prerequisite 00: Postman foundations](../modules/00-postman-prerequisite/) and its practical lab at `course/labs/00-postman-prerequisite/README.md`. It is a required three-hour part of the course and must appear before Lab 01. Use the local file-backed `TaskBox API` collection under `postman/collections/TaskBox API/`; do not create a duplicate collection.
+
 ## Reference material
 
-Work through the course modules in order. When you need implementation details for the course application, start with the [TaskBox API domain and routes](../taskbox/domain-and-routes/), then use the neighboring reference pages for authentication, project roles, cursor pagination, and signed webhooks.
+Work through the prerequisite and numbered course modules in order. When you need implementation details for the course application, start with the [TaskBox API domain and routes](../taskbox/domain-and-routes/), then use the neighboring reference pages for authentication, project roles, cursor pagination, and signed webhooks.
 
 For storage guidance, begin with [SQLite-first persistence](../persistence/sqlite-first/). Use [PostgreSQL with Docker](../persistence/postgresql/) when you reach the database transition lab.
 

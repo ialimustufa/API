@@ -5,7 +5,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from taskbox.domain.models import User
 
-bearer = HTTPBearer(auto_error=False)
+bearer = HTTPBearer(auto_error=False, scheme_name="bearerAuth", bearerFormat="JWT")
 
 
 def services(request: Request):
@@ -13,7 +13,7 @@ def services(request: Request):
 
 
 def current_user(
-    credentials: HTTPAuthorizationCredentials | None = Depends(bearer), request: Request = None
+    request: Request, credentials: HTTPAuthorizationCredentials | None = Depends(bearer)
 ) -> User:
     if not credentials:
         raise HTTPException(
@@ -34,11 +34,11 @@ def current_user(
 
 
 def optional_user(
-    credentials: HTTPAuthorizationCredentials | None = Depends(bearer), request: Request = None
+    request: Request, credentials: HTTPAuthorizationCredentials | None = Depends(bearer)
 ) -> User | None:
     if not credentials:
         return None
-    return current_user(credentials, request)
+    return current_user(request=request, credentials=credentials)
 
 
 __all__ = ["current_user", "optional_user", "services"]

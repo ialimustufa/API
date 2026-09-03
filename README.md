@@ -6,12 +6,13 @@ The new course uses Python, FastAPI, SQLite, and a TaskBox capstone. It includes
 
 ## Start here
 
-1. Install Python 3.13+, Node 24 LTS, and `uv`.
+1. Install Postman, Python 3.13+, Node 24 LTS, and `uv`.
 2. Run `uv sync --all-groups --frozen`.
 3. Start TaskBox with `uv run uvicorn taskbox.main:app --reload`.
 4. Open the API docs at `http://127.0.0.1:8000/docs`.
-5. Follow the 40-hour sequence in [`course/course-map.yml`](course/course-map.yml).
-6. Start the course site with `cd site && npm ci && npm run dev`.
+5. Complete required [Prerequisite Lab 00: Postman foundations](course/labs/00-postman-prerequisite/README.md).
+6. Follow the 43-hour sequence in [`course/course-map.yml`](course/course-map.yml), beginning Lab 01 only after the prerequisite.
+7. Start the course site with `cd site && npm ci && npm run dev`.
 
 Local site routes start at `http://localhost:4321/`. The GitHub Pages build uses
 `/API/`, so the deployed setup page is `https://ialimustufa.github.io/API/setup/`.
@@ -35,14 +36,18 @@ The root Compose stack deploys the SQLite-first TaskBox API with a persistent
 Docker volume:
 
 ```bash
+export TASKBOX_JWT_SECRET="$(openssl rand -hex 32)"
+export TASKBOX_WEBHOOK_SECRET="$(openssl rand -hex 32)"
 docker compose up --build
 curl http://127.0.0.1:8000/healthz
 curl http://127.0.0.1:8000/readyz
 ```
 
-Set `TASKBOX_JWT_SECRET` and `TASKBOX_WEBHOOK_SECRET` to long random values in
-`.env` before exposing the API. The PostgreSQL transition is a separate required
-exercise in [`course/labs/07-operations`](course/labs/07-operations/).
+Compose refuses to start without both secrets, and the production image rejects
+the course placeholder values. Store long random values in `.env` instead of
+exporting them when that better fits your local workflow. The PostgreSQL
+transition is a separate required exercise in
+[`course/labs/07-operations`](course/labs/07-operations/).
 
 ## License
 

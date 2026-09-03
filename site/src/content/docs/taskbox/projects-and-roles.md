@@ -50,7 +50,7 @@ curl -X POST "http://127.0.0.1:8000/api/v1/projects/$PROJECT_ID/tasks" \
 A viewer can list the same project and tasks, but the identical create request returns `403`:
 
 ```json
-{"type":"https://taskbox.dev/problems/forbidden","title":"Forbidden","status":403,"detail":"your project role cannot perform this action","instance":"...","code":"forbidden"}
+{"type":"http://127.0.0.1:8000/problems/forbidden","title":"Forbidden","status":403,"detail":"your project role cannot perform this action","instance":"...","code":"forbidden"}
 ```
 
 Task updates and deletes use `/api/v1/tasks/{task_id}` rather than nesting the project ID. That is safe because the service loads the task, obtains its `project_id`, and performs the same membership check. Never implement this route by checking only that the task ID exists.

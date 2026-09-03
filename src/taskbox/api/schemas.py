@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -34,11 +35,11 @@ class LoginRequest(BaseModel):
 
 class TokenResponse(BaseModel):
     access_token: str
-    token_type: str = "bearer"
+    token_type: Literal["bearer"]
     expires_in: int
 
 
-class UserResponse(BaseModel):
+class User(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: str
     email: str
@@ -58,7 +59,7 @@ class ProjectUpdate(BaseModel):
     description: str | None = Field(default=None, max_length=2000)
 
 
-class ProjectResponse(BaseModel):
+class Project(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: str
     owner_id: str
@@ -77,7 +78,7 @@ class MembershipUpdate(BaseModel):
     role: ProjectRole
 
 
-class MembershipResponse(BaseModel):
+class Membership(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     project_id: str
     user_id: str
@@ -104,7 +105,7 @@ class TaskUpdate(BaseModel):
     due_at: datetime | None = None
 
 
-class TaskResponse(BaseModel):
+class Task(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: str
     project_id: str
@@ -121,11 +122,60 @@ class TaskResponse(BaseModel):
 
 class PageResponse(BaseModel):
     items: list
-    next_cursor: str | None = None
+    next_cursor: str | None
 
 
-class HealthResponse(BaseModel):
-    status: str = "ok"
+class ProjectPage(BaseModel):
+    items: list[Project]
+    next_cursor: str | None
+
+
+class MembershipPage(BaseModel):
+    items: list[Membership]
+    next_cursor: str | None
+
+
+class TaskPage(BaseModel):
+    items: list[Task]
+    next_cursor: str | None
+
+
+class PageInfo(BaseModel):
+    next_cursor: str | None
+
+
+class Health(BaseModel):
+    status: Literal["ok"]
+
+
+class WebhookImportResponse(BaseModel):
+    event_id: str
+    imported: int = Field(ge=0)
+
+
+class WebhookImportRequest(BaseModel):
+    project_id: str
+    actor_id: str | None = None
+    tasks: list[TaskCreate] = Field(min_length=1)
+
+
+class ProblemDetail(BaseModel):
+    type: str
+    title: str
+    status: int
+    detail: str
+    instance: str | None = None
+    code: str | None = None
+    errors: list[dict] | None = None
+
+
+# Route imports retain their descriptive response aliases while the OpenAPI
+# component names match the curated public contract.
+UserResponse = User
+ProjectResponse = Project
+MembershipResponse = Membership
+TaskResponse = Task
+HealthResponse = Health
 
 
 __all__ = [
@@ -135,13 +185,20 @@ __all__ = [
     "MembershipResponse",
     "MembershipUpdate",
     "PageResponse",
+    "PageInfo",
+    "ProjectPage",
     "ProjectCreate",
     "ProjectResponse",
     "ProjectUpdate",
     "RegisterRequest",
     "TaskCreate",
     "TaskResponse",
+    "TaskPage",
     "TaskUpdate",
     "TokenResponse",
     "UserResponse",
+    "MembershipPage",
+    "WebhookImportRequest",
+    "WebhookImportResponse",
+    "ProblemDetail",
 ]

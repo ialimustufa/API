@@ -1,5 +1,7 @@
 # Lab 01: HTTP and API design
 
+Before starting, complete the required Postman prerequisite at `course/labs/00-postman-prerequisite/README.md`.
+
 Learn to turn a small requirement into a predictable HTTP contract. This lab
 uses no third-party packages: the contract is an OpenAPI document and the
 solution includes a tiny standard-library server you can run and inspect.

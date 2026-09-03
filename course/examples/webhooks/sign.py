@@ -1,3 +1,5 @@
+"""Signer for the timestamped Lab 10 receiver, not the TaskBox reference API."""
+
 import hashlib
 import hmac
 import json

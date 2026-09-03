@@ -48,6 +48,12 @@ uv run pytest
 
 Then register a user and exercise the route examples in the TaskBox chapters. Restart the server and confirm SQLite data remains. For clean state, remove only a disposable lesson database you intentionally created.
 
+## Reference material
+
+Work through the course modules in order. When you need implementation details for the course application, start with the [TaskBox API domain and routes](../taskbox/domain-and-routes/), then use the neighboring reference pages for authentication, project roles, cursor pagination, and signed webhooks.
+
+For storage guidance, begin with [SQLite-first persistence](../persistence/sqlite-first/). Use [PostgreSQL with Docker](../persistence/postgresql/) when you reach the database transition lab.
+
 ## Documentation site
 
 The site is in `site/`. Keep the committed npm lockfile in sync:

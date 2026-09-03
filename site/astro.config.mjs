@@ -24,6 +24,22 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Course modules',
+          items: [
+            { label: '01 · HTTP and API design', slug: 'modules/01-http-api-design' },
+            { label: '02 · FastAPI foundations', slug: 'modules/02-fastapi-foundations' },
+            { label: '03 · Resource CRUD', slug: 'modules/03-resource-crud' },
+            { label: '04 · Testing and clients', slug: 'modules/04-testing-clients' },
+            { label: '05 · Authentication and security', slug: 'modules/05-auth-security' },
+            { label: '06 · Persistence', slug: 'modules/06-persistence' },
+            { label: '07 · Operations', slug: 'modules/07-operations' },
+            { label: '08 · GraphQL and gRPC', slug: 'modules/08-graphql-grpc' },
+            { label: '09 · Realtime APIs', slug: 'modules/09-realtime' },
+            { label: '10 · Webhooks and events', slug: 'modules/10-webhooks-events' },
+            { label: '11 · Capstone deployment', slug: 'modules/11-capstone-deployment' },
+          ],
+        },
+        {
           label: 'TaskBox API',
           items: [
             { label: 'Domain and routes', slug: 'taskbox/domain-and-routes' },
@@ -38,22 +54,6 @@ export default defineConfig({
           items: [
             { label: 'SQLite first', slug: 'persistence/sqlite-first' },
             { label: 'PostgreSQL with Docker', slug: 'persistence/postgresql' },
-          ],
-        },
-        {
-          label: 'Course modules',
-          items: [
-            { label: '01 · HTTP and API design', slug: 'modules/01-http-api-design' },
-            { label: '02 · FastAPI foundations', slug: 'modules/02-fastapi-foundations' },
-            { label: '03 · Resource CRUD', slug: 'modules/03-resource-crud' },
-            { label: '04 · Testing and clients', slug: 'modules/04-testing-clients' },
-            { label: '05 · Authentication and security', slug: 'modules/05-auth-security' },
-            { label: '06 · Persistence', slug: 'modules/06-persistence' },
-            { label: '07 · Operations', slug: 'modules/07-operations' },
-            { label: '08 · GraphQL and gRPC', slug: 'modules/08-graphql-grpc' },
-            { label: '09 · Realtime APIs', slug: 'modules/09-realtime' },
-            { label: '10 · Webhooks and events', slug: 'modules/10-webhooks-events' },
-            { label: '11 · Capstone deployment', slug: 'modules/11-capstone-deployment' },
           ],
         },
       ],

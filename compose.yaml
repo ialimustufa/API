@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    environment:
+      TASKBOX_DATABASE_URL: sqlite:////data/taskbox.db
+      TASKBOX_JWT_SECRET: ${TASKBOX_JWT_SECRET:-change-me-in-development}
+      TASKBOX_WEBHOOK_SECRET: ${TASKBOX_WEBHOOK_SECRET:-change-me-in-development}
+    ports:
+      - "8000:8000"
+    volumes:
+      - taskbox_data:/data
+volumes:
+  taskbox_data:

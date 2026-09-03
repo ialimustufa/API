@@ -64,7 +64,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:4321/`. Local links use root `/`. The production GitHub Pages build is beneath `/API/`; a page linked as `/setup/` locally is reached as `/API/setup/` when deployed. Do not hard-code `/API/` into lesson links, because that breaks local preview.
+Open `http://localhost:4321/`. Use relative links for internal documentation routes. For example, `./setup/` from the home page resolves to `/setup/` locally and `/API/setup/` in production. Avoid both root-absolute `/setup/` links and hard-coded `/API/setup/` links so local preview and GitHub Pages use the same source.
 
 Build before sharing documentation changes:
 

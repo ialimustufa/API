@@ -1,0 +1,31 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/api/v1/projects/:project_id/members'
+order: 2000
+description: |-
+  Owner-only membership creation. Adds the captured secondary user as viewer. Roles `viewer` and `editor` are assignable; owner is reserved. Existing membership returns 409 and unknown user returns 404.
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "user_id": "{{member_id}}",
+      "role": "viewer"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Membership creation returns 201', function () { pm.response.to.have.status(201); });
+      const body = pm.response.json();
+      pm.test('Viewer membership matches workflow IDs', function () {
+        pm.expect(body.project_id).to.eql(pm.collectionVariables.get('project_id'));
+        pm.expect(body.user_id).to.eql(pm.collectionVariables.get('member_id'));
+        pm.expect(body.role).to.eql('viewer');
+      });
+examples: './.resources/Add member.resources/examples'

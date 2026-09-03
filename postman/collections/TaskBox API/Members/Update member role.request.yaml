@@ -1,0 +1,26 @@
+$kind: http-request
+method: PATCH
+url: '{{base_url}}/api/v1/projects/:project_id/members/:user_id'
+order: 3000
+description: |-
+  Owner-only role change. Promotes the secondary member to editor. Assigning owner returns 422; a missing membership returns 404.
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+  - key: user_id
+    value: '{{member_id}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "role": "editor"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Membership update returns 200', function () { pm.response.to.have.status(200); });
+      pm.expect(pm.response.json().role).to.eql('editor');

@@ -1,0 +1,33 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/api/v1/auth/token'
+order: 2000
+description: |-
+  Exchanges owner credentials for a short-lived Bearer JWT. Invalid credentials return 401. The default lifetime is 3600 seconds and is configurable by TASKBOX_JWT_EXPIRES.
+auth:
+  type: noauth
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "{{owner_email}}",
+      "password": "{{owner_password}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Owner token exchange returns 200', function () {
+        pm.response.to.have.status(200);
+      });
+      const body = pm.response.json();
+      pm.test('Token response has the documented shape', function () {
+        pm.expect(body).to.include.all.keys('access_token', 'token_type', 'expires_in');
+        pm.expect(body.token_type).to.eql('bearer');
+        pm.expect(body.expires_in).to.be.a('number').and.above(0);
+      });
+      pm.collectionVariables.set('owner_access_token', body.access_token);
+examples: './.resources/Get owner token.resources/examples'

@@ -1,0 +1,17 @@
+$kind: http-request
+method: DELETE
+url: '{{base_url}}/api/v1/projects/:project_id'
+order: 9000
+description: |-
+  Owner-only project deletion. Cascades memberships and tasks. Returns 204 with no response body. Keep this last in a workflow; subsequent project-scoped requests will return 404.
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Project deletion returns empty 204', function () {
+        pm.response.to.have.status(204);
+        pm.expect(pm.response.text()).to.eql('');
+      });

@@ -1,0 +1,26 @@
+$kind: http-request
+method: PATCH
+url: '{{base_url}}/api/v1/projects/:project_id'
+order: 4000
+description: |-
+  Owner-only partial project update. Omitted fields remain unchanged; sending `description: null` clears the description. Editors/viewers receive 403. Empty or oversized fields return 422.
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Postman workflow project - updated",
+      "description": "Updated through the owner-only PATCH route."
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Project update returns 200', function () { pm.response.to.have.status(200); });
+      const body = pm.response.json();
+      pm.expect(body.name).to.eql('Postman workflow project - updated');

@@ -1,0 +1,35 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/api/v1/auth/register'
+order: 1000
+description: |-
+  Creates the primary workflow user. Email is normalized to lowercase. Requires an email containing `@`, a password of at least 8 characters, and display_name of 1-120 characters. Returns 201; duplicate email returns 409; invalid input returns 422.
+auth:
+  type: noauth
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "{{owner_email}}",
+      "password": "{{owner_password}}",
+      "display_name": "{{owner_display_name}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Owner registration returns 201', function () {
+        pm.response.to.have.status(201);
+      });
+      const body = pm.response.json();
+      pm.test('User response is complete and excludes credentials', function () {
+        pm.expect(body).to.include.all.keys('id', 'email', 'display_name', 'status', 'created_at', 'updated_at');
+        pm.expect(body).not.to.have.any.keys('password', 'password_hash');
+        pm.expect(body.status).to.eql('active');
+        pm.expect(body.email).to.eql(pm.collectionVariables.get('owner_email').toLowerCase());
+      });
+      pm.collectionVariables.set('owner_id', body.id);
+examples: './.resources/Register owner.resources/examples'

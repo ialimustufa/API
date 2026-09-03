@@ -1,0 +1,16 @@
+$kind: http-example
+name: 200 OK
+request:
+  url: '{{base_url}}/api/v1/auth/token'
+  method: POST
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    - key: Content-Type
+      value: application/json
+  body:
+    type: json
+    content: |-
+      {"access_token":"eyJ...","token_type":"bearer","expires_in":3600}
+order: 1000

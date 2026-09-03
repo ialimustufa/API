@@ -1,0 +1,7 @@
+$kind: collection
+name: Auth
+description: |-
+  Account registration and JWT authentication workflow. Run owner registration/token first, then member registration/token. Registration lowercases emails; passwords require at least eight characters; display names are 1-120 characters. Duplicate email is 409. Token responses contain an HS256 JWT with issuer `taskbox`, subject=user UUID, and default 3600-second expiry.
+
+  Course mapping: use this folder with `course/labs/02-fastapi-basics/README.md` for typed input validation, `course/labs/05-auth-security/README.md` for JWT and current-user boundaries, and `course/labs/11-capstone-deployment/README.md` for the capstone identity bootstrap. The focused Lab 05 service is separate; these requests target the integrated TaskBox application.
+order: 2000

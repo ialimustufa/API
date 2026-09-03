@@ -1,0 +1,8 @@
+# Use this workspace to collaborate
+workspace:
+  id: 7e09ac8a-2f0a-42c4-9f4e-81503aaca133
+
+localResources:
+  specs:
+    - ../contracts/taskbox.openapi.json
+    - ../course/labs/01-http-api-design/solution/openapi.yaml

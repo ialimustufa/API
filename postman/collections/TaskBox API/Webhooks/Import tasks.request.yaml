@@ -1,0 +1,36 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/api/v1/webhooks/tasks/import'
+order: 1000
+description: |-
+  Imports one or more tasks from a signed payload. Required headers are a unique event ID and an HMAC-SHA256 signature over the exact raw request bytes. The script substitutes variables first, signs that exact body, and replaces the body with the signed bytes. Returns 202. Wrong signature is 401, unauthorized role 403, missing project 404, duplicate event 409, and invalid body/task values 422.
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: X-Webhook-Event-ID
+    value: '{{webhook_event_id}}'
+  - key: X-Webhook-Signature
+    value: '{{webhook_signature}}'
+body:
+  type: json
+  content: |-
+    {"project_id":"{{project_id}}","actor_id":"{{owner_id}}","tasks":[{"title":"Imported vendor task","description":"Created by the signed webhook importer.","status":"todo","priority":2,"assignee_id":"{{member_id}}","due_at":"2030-02-01T12:00:00Z"}]}
+scripts:
+  - type: beforeRequest
+    language: text/javascript
+    code: |-
+      const raw = pm.variables.replaceIn(pm.request.body.raw);
+      pm.request.body.raw = raw;
+      const digest = CryptoJS.HmacSHA256(raw, pm.collectionVariables.get('webhook_secret')).toString(CryptoJS.enc.Hex);
+      pm.variables.set('webhook_signature', `sha256=${digest}`);
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Webhook import returns 202', function () { pm.response.to.have.status(202); });
+      const body = pm.response.json();
+      pm.test('Webhook result identifies the accepted event', function () {
+        pm.expect(body.event_id).to.eql(pm.collectionVariables.get('webhook_event_id'));
+        pm.expect(body.imported).to.eql(1);
+        pm.expect(body.duplicate).to.eql(false);
+      });
+examples: './.resources/Import tasks.resources/examples'

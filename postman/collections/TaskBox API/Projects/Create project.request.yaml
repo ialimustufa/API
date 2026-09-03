@@ -1,0 +1,28 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/api/v1/projects'
+order: 2000
+description: |-
+  Creates a project and atomically grants the caller owner membership. Name is required (1-160 characters); description is optional and at most 2000 characters. Returns 201.
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Postman workflow project",
+      "description": "Local verification of TaskBox projects, memberships, tasks, and webhooks."
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Project creation returns 201', function () { pm.response.to.have.status(201); });
+      const body = pm.response.json();
+      pm.test('Project response has identifiers and timestamps', function () {
+        pm.expect(body).to.include.all.keys('id', 'owner_id', 'name', 'description', 'created_at', 'updated_at');
+        pm.expect(body.owner_id).to.eql(pm.collectionVariables.get('owner_id'));
+      });
+      pm.collectionVariables.set('project_id', body.id);
+examples: './.resources/Create project.resources/examples'

@@ -1,0 +1,22 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/api/v1/projects/:project_id/members'
+order: 4000
+description: |-
+  Authorization example: the secondary project member (viewer or editor) may list memberships. This request overrides folder auth with the member token.
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{member_access_token}}'
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+queryParams:
+  - key: limit
+    value: '50'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('A project member can list memberships', function () { pm.response.to.have.status(200); });

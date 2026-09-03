@@ -1,0 +1,37 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/api/v1/projects/:project_id/tasks'
+order: 1000
+description: |-
+  Lists tasks for any project member. Supports cursor pagination plus optional `status` and `assignee_id` filters. Keep filters unchanged while following a cursor. Status values are todo, in_progress, done, archived.
+pathVariables:
+  - key: project_id
+    value: '{{project_id}}'
+queryParams:
+  - key: limit
+    value: '50'
+    description: Page size from 1 through 100.
+  - key: cursor
+    value: '{{cursor}}'
+    description: Opaque continuation token.
+    disabled: true
+  - key: status
+    value: todo
+    description: Optional task status filter.
+    disabled: true
+  - key: assignee_id
+    value: '{{member_id}}'
+    description: Optional exact assignee UUID filter.
+    disabled: true
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Task list returns 200', function () { pm.response.to.have.status(200); });
+      const body = pm.response.json();
+      pm.test('Task list is paginated', function () {
+        pm.expect(body.items).to.be.an('array');
+        pm.expect(body).to.have.property('next_cursor');
+      });
+      if (body.next_cursor) pm.collectionVariables.set('cursor', body.next_cursor);
+examples: './.resources/List tasks.resources/examples'

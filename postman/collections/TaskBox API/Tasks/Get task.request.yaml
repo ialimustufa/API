@@ -1,0 +1,17 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/api/v1/tasks/:task_id'
+order: 3000
+description: |-
+  Reads a task after deriving its project and checking caller membership. Missing task returns 404; authenticated non-member returns 403.
+pathVariables:
+  - key: task_id
+    value: '{{task_id}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Task retrieval returns 200', function () { pm.response.to.have.status(200); });
+      const body = pm.response.json();
+      pm.expect(body.id).to.eql(pm.collectionVariables.get('task_id'));
+      pm.expect(body.project_id).to.eql(pm.collectionVariables.get('project_id'));

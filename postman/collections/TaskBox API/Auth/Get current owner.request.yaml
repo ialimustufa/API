@@ -1,0 +1,23 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/api/v1/me'
+order: 3000
+description: |-
+  Returns the active user identified by the owner JWT. Missing, invalid, expired, wrong-issuer, or inactive-user credentials return 401 with a Bearer challenge.
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{owner_access_token}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Current owner returns 200', function () {
+        pm.response.to.have.status(200);
+      });
+      const body = pm.response.json();
+      pm.test('Current owner matches captured identity', function () {
+        pm.expect(body.id).to.eql(pm.collectionVariables.get('owner_id'));
+        pm.expect(body.email).to.eql(pm.collectionVariables.get('owner_email').toLowerCase());
+      });

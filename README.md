@@ -1,5 +1,17 @@
-# API Basics
+# API Engineering Course
 
-Making an Simple API Server using Flask Restful and Python.
+This repository is a beginner-to-production course for designing, building, testing, and operating APIs.
 
-Fork this [Postman Public Workspace](https://www.postman.com/iali-dev/workspace/getting-hands-dirty-with-apis/overview) to get started! 
+The new course uses Python, FastAPI, SQLite, and a TaskBox capstone. It includes runnable labs, generated OpenAPI contracts, authentication, webhooks, observability, and deployment exercises. Historical material is preserved under [`legacy/`](legacy/).
+
+## Start here
+
+1. Install Python 3.13+, Node 24 LTS, and `uv`.
+2. Run `uv sync`.
+3. Follow the lessons and labs in [`course/course-map.yml`](course/course-map.yml).
+4. Start the documentation site with `cd site && npm install && npm run dev`.
+
+
+## License
+
+Authored course and application code is MIT licensed. Historical third-party material retains its original provenance; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).

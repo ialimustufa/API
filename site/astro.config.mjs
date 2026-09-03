@@ -13,9 +13,7 @@ export default defineConfig({
         replacesTitle: true,
         src: './src/assets/logo.svg',
       },
-      social: {
-        github: 'https://github.com/ialimustufa/API',
-      },
+      social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/ialimustufa/API' }],
       sidebar: [
         {
           label: 'Start here',
